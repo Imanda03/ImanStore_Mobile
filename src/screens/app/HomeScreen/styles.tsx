@@ -47,6 +47,6 @@ export const styles = StyleSheet.create({
     color: '#694241',
   },
   products: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
   },
 });

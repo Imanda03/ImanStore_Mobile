@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   image: {
-    width: (width - 64) / 2,
+    width: (width - 50) / 2,
     height: 220,
     borderRadius: 8,
   },

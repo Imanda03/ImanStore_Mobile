@@ -14,6 +14,7 @@ const Tabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
+        tabBarHideOnKeyboard: true,
         tabBarIcon: ({focused, color, size}) => {
           let iconName;
           if (route.name === 'Home') {

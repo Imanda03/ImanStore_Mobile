@@ -21,7 +21,7 @@ const CategoryBox: React.FC<HeaderProps> = ({
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.container, isFirst ? {marginLeft: 24} : {}]}>
+      style={[styles.container, isFirst ? {marginLeft: 15} : {}]}>
       <View
         style={[
           styles.imageContainer,

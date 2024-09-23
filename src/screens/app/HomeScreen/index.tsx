@@ -95,54 +95,56 @@ const HomeScreen = ({navigation}: any) => {
 
   return (
     <SafeAreaView style={{backgroundColor: '#dcdedc', height: '100%'}}>
-      <ScrollView>
-        <View style={styles.topView}>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>Find</Text>
-            <Text style={styles.text}>The Best Deals</Text>
-          </View>
-          <Avatar
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/512/6858/6858504.png',
-            }}
-            size={80}
-            rounded
-            icon={{name: 'home'}}
-          />
-        </View>
-        <View style={{marginTop: -30}}>
-          <TextInput
-            style={styles.input}
-            placeholder="Search..."
-            right={<TextInput.Icon size={30} icon="magnify" />}
-            underlineColor="transparent"
-            onChangeText={handleChangeSearch}
-          />
-        </View>
-        <FlatList
-          horizontal
-          data={categories}
-          showsHorizontalScrollIndicator={false}
-          renderItem={renderCategoryItem}
-          style={styles.list}
-          keyExtractor={(item, index) => String(index)}
-        />
+      <FlatList
+        columnWrapperStyle={styles.products}
+        numColumns={2}
+        data={filteredProduct}
+        renderItem={renderProductItem}
+        keyExtractor={item => String(item.id)}
+        ListFooterComponent={<View style={{height: 200}} />}
+        ListHeaderComponent={
+          <View style={{flex: 1}}>
+            <View style={styles.topView}>
+              <View style={styles.textContainer}>
+                <Text style={styles.text}>Find</Text>
+                <Text style={styles.text}>The Best Deals</Text>
+              </View>
+              <Avatar
+                source={{
+                  uri: 'https://cdn-icons-png.flaticon.com/512/6858/6858504.png',
+                }}
+                size={80}
+                rounded
+                icon={{name: 'home'}}
+              />
+            </View>
+            <View style={{marginTop: -30}}>
+              <TextInput
+                style={styles.input}
+                placeholder="Search..."
+                right={<TextInput.Icon size={30} icon="magnify" />}
+                underlineColor="transparent"
+                onChangeText={handleChangeSearch}
+              />
+            </View>
+            <FlatList
+              horizontal
+              data={categories}
+              showsHorizontalScrollIndicator={false}
+              renderItem={renderCategoryItem}
+              style={styles.list}
+              keyExtractor={(item, index) => String(index)}
+            />
 
-        <View style={styles.recommendedContainer}>
-          <Text style={styles.recommendedText}>Recommended for you</Text>
-          <TouchableOpacity>
-            <Text style={styles.recommendedLink}>See All</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          style={styles.products}
-          numColumns={2}
-          data={filteredProduct}
-          renderItem={renderProductItem}
-          keyExtractor={item => String(item.id)}
-          ListFooterComponent={<View style={{height: 200}} />}
-        />
-      </ScrollView>
+            <View style={styles.recommendedContainer}>
+              <Text style={styles.recommendedText}>Recommended for you</Text>
+              <TouchableOpacity>
+                <Text style={styles.recommendedLink}>See All</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 };
