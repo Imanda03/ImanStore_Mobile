@@ -31,6 +31,8 @@ const SignUp = ({navigation}: any) => {
           <InputComponent placeholder="Address" />
           <InputComponent placeholder="Contact Number" />
           <InputComponent placeholder="Email" />
+          <InputComponent placeholder="Password" />
+          <InputComponent placeholder="Confirm Password" />
 
           <View style={styles.agreeRow}>
             <CheckBox checked={checked} onCheck={setCHecked} />

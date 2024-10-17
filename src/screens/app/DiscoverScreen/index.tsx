@@ -62,7 +62,7 @@ const DiscoverScreen = ({navigation}: any) => {
         backgroundColor: '#dcdedc',
         height: '100%',
       }}>
-      <ScrollView>
+      <View>
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.input}
@@ -79,8 +79,9 @@ const DiscoverScreen = ({navigation}: any) => {
           data={filteredProduct}
           renderItem={renderProductItem}
           keyExtractor={item => String(item.id)}
+          ListFooterComponent={<View style={{height: 200}} />}
         />
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };

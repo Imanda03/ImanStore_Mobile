@@ -12,14 +12,14 @@ const ProfileScreen = ({navigation}: any) => {
   };
 
   const onSettingsPress = () => {
-    navigation.navigate('Settings');
+    navigation.navigate('ProfileStack', {screen: 'Settings'});
   };
 
   const onNewListingsPress = () => {
     navigation.navigate('CreateListings');
   };
   const onMyListingPress = () => {
-    navigation.navigate('MyListings');
+    navigation.navigate('Order');
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#dcdedc'}}>
@@ -49,8 +49,8 @@ const ProfileScreen = ({navigation}: any) => {
 
           <ListItem
             onPress={onMyListingPress}
-            title="My Listings"
-            subtitle={`You have ${num} listings`}
+            title="Orders"
+            subtitle={`You have ${num} orders in progress`}
           />
           <ListItem
             onPress={onSettingsPress}

@@ -1,4 +1,4 @@
-import {View, Text, Pressable, Image} from 'react-native';
+import {View, Text, Pressable, Image, Modal, Alert} from 'react-native';
 import React, {useState} from 'react';
 import {styles} from './styles';
 

@@ -3,12 +3,9 @@ import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 2,
     shadowColor: '#000',
-
     shadowOffset: {
       width: 0,
       height: 2,
@@ -19,17 +16,22 @@ export const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: '#e8ebea',
     marginVertical: 12,
-    borderRadius: 10,
+    borderRadius: 15,
   },
   content: {},
   title: {
-    color: '#030d0a',
+    color: 'blue',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  subtitle: {
-    marginTop: 6,
-    color: '#586662',
+  label: {
+    color: '#4d5452',
     fontSize: 12,
+    marginBottom: 6,
+  },
+  input: {
+    color: '#030d0a',
+    fontSize: 14,
+    fontWeight: '500',
   },
 });

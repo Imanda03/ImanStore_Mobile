@@ -16,9 +16,9 @@ const CheckBoxComponent = ({checked, onCheck}: CheckBoxInterface) => {
       }}
       activeOpacity={0.6}>
       {checked ? (
-        <FontAwesome name="check-square" size={24} />
+        <FontAwesome name="check-square" size={24} color="black" />
       ) : (
-        <Fontisto name="checkbox-passive" size={24} />
+        <Fontisto name="checkbox-passive" size={24} color="black" />
       )}
     </TouchableOpacity>
   );

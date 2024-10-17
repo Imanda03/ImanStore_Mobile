@@ -18,7 +18,7 @@ const ListItem = ({title, subtitle, onPress, style}: ListProps) => {
         <Text style={styles.title}>{title}</Text>
         {!!subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       </View>
-      <Entypo name="arrow-with-circle-right" size={20} color={'gray'} />
+      <Entypo name="arrow-with-circle-right" size={26} color="#030d0a" />
     </Pressable>
   );
 };

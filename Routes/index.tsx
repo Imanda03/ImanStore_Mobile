@@ -7,11 +7,12 @@ import HomeScreen from '../src/screens/app/HomeScreen';
 import ProfileScreen from '../src/screens/app/ProfileScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InnerScreen from './StackRoute/InnerScreen';
+import {ProfileStack} from './StackRoute/ProfileStack';
 
 const Routes = () => {
   const Stack = createNativeStackNavigator();
 
-  const isLoggedIn: boolean = true;
+  const isLoggedIn: boolean = false;
 
   return (
     <SafeAreaProvider>
@@ -28,6 +29,12 @@ const Routes = () => {
               <Stack.Screen
                 name="InnerScreen"
                 component={InnerScreen}
+                options={{headerShown: false}}
+              />
+
+              <Stack.Screen
+                name="ProfileStack"
+                component={ProfileStack}
                 options={{headerShown: false}}
               />
             </>
