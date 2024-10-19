@@ -8,11 +8,34 @@ import ProfileScreen from '../src/screens/app/ProfileScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InnerScreen from './StackRoute/InnerScreen';
 import {ProfileStack} from './StackRoute/ProfileStack';
+import {useAuth} from '../src/Context';
+import {useEffect, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Routes = () => {
   const Stack = createNativeStackNavigator();
 
-  const isLoggedIn: boolean = false;
+  const {authToken} = useAuth(); // Get token from AuthContext
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+
+  useEffect(() => {
+    if (authToken !== null) {
+      setIsLoading(false); // End loading state once token is checked
+    }
+  }, [authToken]);
+
+  // if (isLoading) {
+  //   // Optionally add a loading spinner or splash screen here
+  //   return (
+  //     <View>
+  //       <Text>Loading...</Text>
+  //     </View>
+  //   );
+  // }
+
+  const isLoggedIn = !!authToken;
+
+  console.log('userToken===>', authToken);
 
   return (
     <SafeAreaProvider>

@@ -3,12 +3,12 @@ import {StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingVertical: 5,
+    // paddingVertical: 5,
   },
   GreetContainer: {
     flexDirection: 'column',
     gap: 5,
-    marginTop: 35,
+    // marginTop: 35,
     marginBottom: 20,
   },
   greetContent: {
@@ -49,5 +49,11 @@ export const styles = StyleSheet.create({
   agreeTextBold: {
     fontWeight: 'bold',
     color: 'black',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: -10,
+    marginBottom: 10,
   },
 });

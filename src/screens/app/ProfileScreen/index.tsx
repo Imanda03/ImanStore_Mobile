@@ -5,10 +5,16 @@ import Header from '../../../components/core/Header';
 import React from 'react';
 import ListItem from '../../../components/ListItem';
 import {Avatar} from 'react-native-elements';
+import {useAuth} from '../../../Context';
+import {useToast} from '../../../Context/ToastContext';
 const ProfileScreen = ({navigation}: any) => {
+  const {logout} = useAuth();
+  const {showToast} = useToast();
+
   const num = 10;
   const onLogout = () => {
-    console.log('Log out clicked');
+    logout();
+    showToast('Logout Successfully', 'success');
   };
 
   const onSettingsPress = () => {

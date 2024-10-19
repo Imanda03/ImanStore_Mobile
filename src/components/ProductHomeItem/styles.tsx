@@ -8,17 +8,20 @@ export const styles = StyleSheet.create({
     margin: 8,
   },
   title: {
-    color: 'grey',
+    color: '#515452',
     paddingVertical: 8,
+    fontWeight: '500',
   },
   image: {
     width: (width - 50) / 2,
-    height: 220,
+    height: 200,
     borderRadius: 8,
   },
   price: {
-    color: 'black',
+    color: '#010d05',
     paddingBottom: 8,
+    fontWeight: '600',
+    fontSize: 16,
   },
   centeredView: {
     flex: 1,
