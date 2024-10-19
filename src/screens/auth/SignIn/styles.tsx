@@ -32,4 +32,10 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
     color: 'black',
   },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: -10,
+    marginBottom: 10,
+  },
 });

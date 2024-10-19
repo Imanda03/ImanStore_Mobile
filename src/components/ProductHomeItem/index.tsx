@@ -4,22 +4,22 @@ import {styles} from './styles';
 
 interface HeaderProps {
   title: string;
-  image: any;
+  images: string[];
   price: string;
   onPress?: (value: any) => void;
 }
 
 const ProductHomeItem: React.FC<HeaderProps> = ({
   title,
-  image,
+  images,
   onPress,
   price,
 }) => {
   return (
     <Pressable onPress={onPress} style={styles.container}>
-      <Image style={styles.image} source={{uri: image}} />
+      <Image style={styles.image} source={{uri: images[0]}} />
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.price}>{price}</Text>
+      <Text style={styles.price}>Rs. {price}</Text>
     </Pressable>
   );
 };

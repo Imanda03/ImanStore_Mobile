@@ -19,7 +19,7 @@ interface CategoryItem {
 
 interface ProductItem {
   title: string;
-  image: string;
+  images: string;
   categoryName: any;
   price: string;
   description: string;
@@ -64,23 +64,6 @@ const FavoriteScreen = ({navigation}: any) => {
   return (
     <SafeAreaView style={{backgroundColor: '#dcdedc', minHeight: '100%'}}>
       <Header title="Favorites" />
-      <FlatList
-        // columnWrapperStyle={styles.products}
-        // numColumns={1}
-        data={filteredProduct}
-        renderItem={renderProductItem}
-        keyExtractor={item => String(item.id)}
-        ListFooterComponent={<View style={{height: 200}} />}
-        ListHeaderComponent={
-          <FlatList
-            horizontal
-            data={categories}
-            showsHorizontalScrollIndicator={false}
-            renderItem={renderCategoryItem}
-            keyExtractor={(item, index) => String(index)}
-          />
-        }
-      />
     </SafeAreaView>
   );
 };

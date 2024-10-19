@@ -1,32 +1,33 @@
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, Pressable, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {styles} from './styles';
 
 interface HeaderProps {
-  title: any;
-  image: string;
-  itemNumber?: number;
+  categoryImage: string;
+  categoryTitle: any;
+  productCount?: number;
   onPress?: (value: any) => void;
 }
 
 const DiscoverCategory: React.FC<HeaderProps> = ({
-  title,
-  image,
-  itemNumber,
+  categoryTitle,
+  categoryImage,
+  productCount,
+  onPress,
 }) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.content}>{itemNumber} New Collections</Text>
+        <Text style={styles.title}>{categoryTitle}</Text>
+        <Text style={styles.content}>{productCount} New Collections</Text>
       </View>
       <Image
         style={{height: 80, width: '50%'}}
         source={{
-          uri: image,
+          uri: categoryImage,
         }}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 

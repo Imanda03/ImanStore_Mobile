@@ -2,8 +2,9 @@ export const products = [
   {
     id: 1,
     title: 'Fluffy Biscuits',
-    image:
+    images: [
       'https://sugargeekshow.com/wp-content/uploads/2020/04/buttermilk-biscuits-12.jpg',
+    ],
     category: 1,
     categoryName: 'Biscuits',
     price: '$ 20.00',
@@ -13,8 +14,9 @@ export const products = [
   {
     id: 2,
     title: 'Chocolate Biscuits',
-    image:
+    images: [
       'https://recipes.net/wp-content/uploads/2023/07/easy-chocolate-biscuits_e458389a439c5805a3c314ad19a6079f.jpeg',
+    ],
     category: 1,
     categoryName: 'Biscuits',
 
@@ -27,8 +29,9 @@ export const products = [
     title: 'Dark Chocolates',
     categoryName: 'Chocolates',
 
-    image:
+    images: [
       'https://i5.walmartimages.com/seo/Lang-s-Chocolates-Dark-Chocolate-Sampler-Box-32-piece-assorted-dark-chocolates_8997cc6d-8daf-4be1-8afc-2c92f8d55f7b.0854bdecbee381aca0d83403f320bdb6.jpeg',
+    ],
     category: 2,
     price: '$ 45.00',
     description:
@@ -39,8 +42,9 @@ export const products = [
     title: 'Shade Tolerant Vegetables',
     categoryName: 'Vegetables',
 
-    image:
+    images: [
       'https://www.thespruce.com/thmb/D0mOY8QVHpySKbHkKeWAMM1DT8I=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/shade-tolerant-vegetables-1403388-02-14f1f292f13144ac8e7bc89275af1e5b.jpg',
+    ],
     category: 3,
     price: '$ 80.00',
     description:

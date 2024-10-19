@@ -40,6 +40,7 @@ export const styles = StyleSheet.create({
   recommendedText: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#2d3b37',
   },
   recommendedLink: {
     fontSize: 12,

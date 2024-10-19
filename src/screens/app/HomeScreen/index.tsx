@@ -15,6 +15,11 @@ import {categories} from '../../../data/Category';
 import CategoryBox from '../../../components/CategoryBox';
 import {products} from '../../../data/Products';
 import ProductHomeItem from '../../../components/ProductHomeItem';
+import {useFocusEffect} from '@react-navigation/native';
+import {useQuery} from 'react-query';
+import {getCategory} from '../../../services/CategoryService';
+import {useAuth} from '../../../Context';
+import {getProducts} from '../../../services/ProductService';
 
 interface RenderCategoryItemProps {
   item: CategoryItem;
@@ -29,7 +34,7 @@ interface CategoryItem {
 
 interface ProductItem {
   title: string;
-  image: string;
+  images: string[];
   category: any;
   price: string;
   description?: string;
@@ -40,37 +45,69 @@ interface RenderProductItemProps {
   index: number;
 }
 const HomeScreen = ({navigation}: any) => {
-  const [selectedCategory, setSelectedCategory] = useState();
+  const {authToken} = useAuth();
+  const {data: productData, error: productError} = useQuery(
+    ['products', authToken],
+    () => getProducts(authToken),
+    {
+      enabled: !!authToken,
+    },
+  );
+  const [selectedCategory, setSelectedCategory] = useState<any>();
   const [keyword, setkeyword] = useState<string>();
-  const [filteredProduct, setFilterProduct] = useState(products);
+  const [filteredProduct, setFilteredProduct] = useState<any[]>([]);
+
+  const {
+    data: categoryData,
+    error: categoryError,
+    isLoading,
+  } = useQuery(['category', authToken], () => getCategory(authToken), {
+    enabled: !!authToken,
+  });
+
+  console.log('sssss', filteredProduct);
+
+  useEffect(() => {
+    if (productData && productData.products) {
+      setFilteredProduct(productData.products);
+    }
+  }, [productData]);
+
+  console.log('category', selectedCategory);
 
   useEffect(() => {
     if (selectedCategory && !keyword) {
-      const updatedProduct = products.filter(
-        product => product?.category === selectedCategory,
+      const updatedProduct = productData?.products.filter(
+        (product: any) => product?.category_id === selectedCategory,
       );
-      setFilterProduct(updatedProduct);
+      setFilteredProduct(updatedProduct);
     } else if (selectedCategory && keyword) {
-      const updatedProduct = products.filter(
-        product =>
-          product?.category === selectedCategory &&
+      const updatedProduct = productData?.products.filter(
+        (product: any) =>
+          product?.category_id === selectedCategory &&
           product?.title.toLowerCase().includes(keyword?.toLowerCase()),
       );
-      setFilterProduct(updatedProduct);
+      setFilteredProduct(updatedProduct);
     } else if (!selectedCategory && keyword) {
-      const updatedProduct = products.filter(product =>
+      const updatedProduct = productData?.products.filter((product: any) =>
         product?.title.toLowerCase().includes(keyword?.toLowerCase()),
       );
-      setFilterProduct(updatedProduct);
+      setFilteredProduct(updatedProduct);
     } else if (!selectedCategory && !keyword) {
-      setFilterProduct(products);
+      setFilteredProduct(productData?.products);
     }
   }, [selectedCategory, keyword]);
+
+  const handleCategoryPress = (id: string) => {
+    setSelectedCategory((prevSelected: string | undefined) =>
+      prevSelected === id ? undefined : id,
+    );
+  };
 
   const renderCategoryItem = ({item, index}: RenderCategoryItemProps) => {
     return (
       <CategoryBox
-        onPress={() => setSelectedCategory(item?.id)}
+        onPress={() => handleCategoryPress(item.id)}
         isSelected={item?.id === selectedCategory}
         isFirst={index === 0}
         title={item?.title}
@@ -80,6 +117,7 @@ const HomeScreen = ({navigation}: any) => {
   };
 
   const renderProductItem = ({item, index}: RenderProductItemProps) => {
+    console.log('item', item);
     const onProductPress = (product: any) => {
       navigation.navigate('InnerScreen', {
         screen: 'ProductDetails',
@@ -92,7 +130,6 @@ const HomeScreen = ({navigation}: any) => {
   const handleChangeSearch = (value: string) => {
     setkeyword(value);
   };
-
   return (
     <SafeAreaView style={{backgroundColor: '#dcdedc', height: '100%'}}>
       <FlatList
@@ -100,7 +137,7 @@ const HomeScreen = ({navigation}: any) => {
         numColumns={2}
         data={filteredProduct}
         renderItem={renderProductItem}
-        keyExtractor={item => String(item.id)}
+        keyExtractor={(item: any) => String(item.id)}
         ListFooterComponent={<View style={{height: 200}} />}
         ListHeaderComponent={
           <View style={{flex: 1}}>
@@ -129,11 +166,11 @@ const HomeScreen = ({navigation}: any) => {
             </View>
             <FlatList
               horizontal
-              data={categories}
+              data={categoryData?.categories}
               showsHorizontalScrollIndicator={false}
               renderItem={renderCategoryItem}
               style={styles.list}
-              keyExtractor={(item, index) => String(index)}
+              keyExtractor={item => String(item.id)}
             />
 
             <View style={styles.recommendedContainer}>

@@ -13,32 +13,56 @@ import {styles} from './styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DiscoverCategory from '../../../components/DiscoverCategory';
 import {discoverCategory} from '../../../data/DiscoverCategory';
+import {useAuth} from '../../../Context';
+import {getDiscover} from '../../../services/DiscoverService';
+import {useQuery} from 'react-query';
 
 interface ProductItem {
   id: number | string;
-  image: string;
-  title: any;
-  itemNumber?: number;
+  categoryImage: string;
+  categoryTitle: any;
+  productCount?: number;
 }
 
 interface RenderProductItemProps {
   item: ProductItem;
   index: number;
 }
-console.log('first', JSON.stringify(discoverCategory, null, 2));
 const DiscoverScreen = ({navigation}: any) => {
-  const [filteredProduct, setFilterProduct] = useState(discoverCategory);
+  const {authToken} = useAuth();
+
+  const {data: discoverData, error: productError} = useQuery(
+    ['discover', authToken],
+    () => getDiscover(authToken),
+    {
+      enabled: !!authToken,
+    },
+  );
+
+  console.log('=====>', discoverData);
+
+  const [filteredProduct, setFilterProduct] = useState([]);
+  useEffect(() => {
+    if (discoverData) {
+      setFilterProduct(discoverData);
+    }
+  }, [discoverData]);
+
   const [keyword, setkeyword] = useState<string>();
 
   useEffect(() => {
     if (keyword) {
-      const updateData = discoverCategory.filter(category => {
-        // console.log('first', keyword);
-        return category?.title.toLowerCase().includes(keyword?.toLowerCase());
-      });
+      const updateData = discoverData.filter(
+        (category: {categoryTitle: string}) => {
+          // console.log('first', keyword);
+          return category?.categoryTitle
+            .toLowerCase()
+            .includes(keyword?.toLowerCase());
+        },
+      );
       setFilterProduct(updateData);
     } else {
-      setFilterProduct(discoverCategory);
+      setFilterProduct(discoverData);
     }
   }, [keyword, discoverCategory]);
 
@@ -48,10 +72,10 @@ const DiscoverScreen = ({navigation}: any) => {
 
   const renderProductItem = ({item, index}: RenderProductItemProps) => {
     const onProductPress = (product: any) => {
-      // navigation.navigate('InnerScreen', {
-      //   screen: 'ProductDetails',
-      //   params: product,
-      // });
+      navigation.navigate('InnerScreen', {
+        screen: 'DiscoverLists',
+        params: product,
+      });
     };
     return <DiscoverCategory onPress={() => onProductPress(item)} {...item} />;
   };
@@ -78,7 +102,7 @@ const DiscoverScreen = ({navigation}: any) => {
         <FlatList
           data={filteredProduct}
           renderItem={renderProductItem}
-          keyExtractor={item => String(item.id)}
+          keyExtractor={(item, index) => String(index)}
           ListFooterComponent={<View style={{height: 200}} />}
         />
       </View>

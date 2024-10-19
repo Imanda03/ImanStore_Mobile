@@ -1,14 +1,13 @@
 import {View, Text, Pressable, Image} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import {styles} from './styles';
-// import {colors} from '../../utils/color';
 
 interface HeaderProps {
   title: string;
   image: string;
   onPress?: () => void;
-  isFirst?: Boolean;
-  isSelected?: any;
+  isFirst?: boolean; // Use 'boolean' instead of 'Boolean' (lowercase)
+  isSelected?: boolean; // Use 'boolean' instead of 'any'
 }
 
 const CategoryBox: React.FC<HeaderProps> = ({
@@ -42,4 +41,5 @@ const CategoryBox: React.FC<HeaderProps> = ({
     </Pressable>
   );
 };
+
 export default React.memo(CategoryBox);

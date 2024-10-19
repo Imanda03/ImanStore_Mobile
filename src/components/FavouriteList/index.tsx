@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface ProductProps {
   title: string;
-  image: string;
+  images: string;
   categoryName: string;
   price: string;
   description: string;
@@ -15,7 +15,7 @@ interface ProductProps {
 
 const FavoriteList: React.FC<ProductProps> = ({
   title,
-  image,
+  images,
   categoryName,
   price,
   description,
@@ -26,7 +26,7 @@ const FavoriteList: React.FC<ProductProps> = ({
       <Image
         style={styles.image}
         source={{
-          uri: image,
+          uri: images[0],
         }}
       />
       <View style={styles.secondContainer}>
