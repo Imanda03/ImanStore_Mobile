@@ -39,8 +39,6 @@ const DiscoverScreen = ({navigation}: any) => {
     },
   );
 
-  console.log('=====>', discoverData);
-
   const [filteredProduct, setFilterProduct] = useState([]);
   useEffect(() => {
     if (discoverData) {

@@ -77,4 +77,12 @@ export const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
+  quantityButton: {
+    padding: 10,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 40,
+    height: 40,
+  },
 });

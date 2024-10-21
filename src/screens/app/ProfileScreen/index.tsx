@@ -7,9 +7,17 @@ import ListItem from '../../../components/ListItem';
 import {Avatar} from 'react-native-elements';
 import {useAuth} from '../../../Context';
 import {useToast} from '../../../Context/ToastContext';
+import {useQuery} from 'react-query';
+import {getProfileDetails} from '../../../services/AuthService';
 const ProfileScreen = ({navigation}: any) => {
-  const {logout} = useAuth();
+  const {logout, authToken, userId} = useAuth();
   const {showToast} = useToast();
+
+  const {
+    data: profileData,
+    isLoading,
+    isError,
+  } = useQuery(['profile', userId], () => getProfileDetails(authToken, userId));
 
   const num = 10;
   const onLogout = () => {
@@ -48,9 +56,9 @@ const ProfileScreen = ({navigation}: any) => {
       </View>
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Anish Sharma</Text>
+          <Text style={styles.title}>{profileData?.userDetails?.username}</Text>
           <View>
-            <Text style={styles.email}>asis03ktm@gmail.com</Text>
+            <Text style={styles.email}>{profileData?.userDetails?.email}</Text>
           </View>
 
           <ListItem

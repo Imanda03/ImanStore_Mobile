@@ -5,6 +5,9 @@ import {categories} from '../../../data/Category';
 import {styles} from './styles';
 import {products} from '../../../data/Products';
 import FavoriteList from '../../../components/FavouriteList';
+import {useAuth} from '../../../Context';
+import {useQuery} from 'react-query';
+import {getFavouriteList} from '../../../services/FavouriteService';
 
 interface RenderCategoryItemProps {
   item: CategoryItem;
@@ -18,11 +21,14 @@ interface CategoryItem {
 }
 
 interface ProductItem {
-  title: string;
-  images: string;
-  categoryName: any;
-  price: string;
-  description: string;
+  product: {
+    id: string | number;
+    title: string;
+    images: string;
+    categoryName: any;
+    price: string;
+    description: string;
+  };
 }
 
 interface RenderProductItemProps {
@@ -31,17 +37,18 @@ interface RenderProductItemProps {
 }
 
 const FavoriteScreen = ({navigation}: any) => {
-  const [filteredProduct, setFilterProduct] = useState(products);
   const [selectedCategory, setSelectedCategory] = useState();
+  const {authToken, userId} = useAuth();
 
-  useEffect(() => {
-    if (selectedCategory) {
-      const updatedProduct = products.filter(
-        product => product?.category === selectedCategory,
-      );
-      setFilterProduct(updatedProduct);
-    }
-  }, [selectedCategory]);
+  const {data: favouriteList, error: productError} = useQuery(
+    ['favouriteList', authToken],
+    () => getFavouriteList(authToken, userId),
+    {
+      enabled: !!authToken,
+    },
+  );
+
+  console.log('first', favouriteList);
 
   const renderProductItem = ({item, index}: RenderProductItemProps) => {
     const onProductPress = (product: any) => {
@@ -50,20 +57,36 @@ const FavoriteScreen = ({navigation}: any) => {
         params: product,
       });
     };
-    return <FavoriteList onPress={() => onProductPress(item)} {...item} />;
-  };
-
-  const renderCategoryItem = ({item, index}: RenderCategoryItemProps) => {
-    const {title} = item;
     return (
-      <View style={styles.itemContainer}>
-        <Text style={styles.itemText}>{title}</Text>
-      </View>
+      <FavoriteList
+        userId={userId}
+        authToken={authToken}
+        onPress={() => onProductPress(item?.product)}
+        {...item?.product}
+      />
     );
   };
+
+  const hasFavorites =
+    favouriteList &&
+    favouriteList.favourites &&
+    favouriteList.favourites.length > 0;
+
   return (
     <SafeAreaView style={{backgroundColor: '#dcdedc', minHeight: '100%'}}>
       <Header title="Favorites" />
+      {hasFavorites ? (
+        <FlatList
+          data={favouriteList.favourites}
+          renderItem={renderProductItem}
+          keyExtractor={(item: any) => String(item.id)}
+          ListFooterComponent={<View style={{height: 200}} />}
+        />
+      ) : (
+        <View style={styles.noFavoritesContainer}>
+          <Text style={styles.noFavoritesText}>No Favorite Products</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };

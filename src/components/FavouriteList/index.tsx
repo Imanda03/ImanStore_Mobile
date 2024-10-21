@@ -3,6 +3,8 @@ import React from 'react';
 import {styles} from './styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useQuery} from 'react-query';
+import {checkFavourite} from '../../services/FavouriteService';
 
 interface ProductProps {
   title: string;
@@ -11,6 +13,9 @@ interface ProductProps {
   price: string;
   description: string;
   onPress: () => void;
+  userId: number | string;
+  id: number | string;
+  authToken: string;
 }
 
 const FavoriteList: React.FC<ProductProps> = ({
@@ -20,7 +25,27 @@ const FavoriteList: React.FC<ProductProps> = ({
   price,
   description,
   onPress,
+  userId,
+  id,
+  authToken,
 }) => {
+  const truncatedDescription =
+    description.length > 100
+      ? description.substring(0, 100) + '...'
+      : description;
+
+  const {data: favoriteData, isLoading} = useQuery(
+    ['checkFavourite', {userId, productId: id}],
+    () => checkFavourite(authToken, {userId, productId: id}),
+    {
+      enabled: !!authToken,
+    },
+  );
+
+  const isFavorite = favoriteData?.exists;
+
+  console.log('isFavorite', isFavorite);
+
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <Image
@@ -38,13 +63,15 @@ const FavoriteList: React.FC<ProductProps> = ({
             <Text style={styles.category}>{categoryName}</Text>
           </View>
         </View>
-        <Text style={styles.description}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, veniam.
-        </Text>
+        <Text style={styles.description}>{truncatedDescription}</Text>
         <View style={styles.categoryContainer}>
           <Text style={styles.title}>Rs. {price}</Text>
           <TouchableOpacity>
-            <Ionicons name="heart" size={24} color="#d1171d" />
+            <Ionicons
+              name={isFavorite ? 'heart' : 'heart-dislike-outline'}
+              size={24}
+              color={isFavorite ? '#d1171d' : '#262b26'}
+            />
           </TouchableOpacity>
         </View>
       </View>

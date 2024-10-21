@@ -65,15 +65,11 @@ const HomeScreen = ({navigation}: any) => {
     enabled: !!authToken,
   });
 
-  console.log('sssss', filteredProduct);
-
   useEffect(() => {
     if (productData && productData.products) {
       setFilteredProduct(productData.products);
     }
   }, [productData]);
-
-  console.log('category', selectedCategory);
 
   useEffect(() => {
     if (selectedCategory && !keyword) {
@@ -117,7 +113,6 @@ const HomeScreen = ({navigation}: any) => {
   };
 
   const renderProductItem = ({item, index}: RenderProductItemProps) => {
-    console.log('item', item);
     const onProductPress = (product: any) => {
       navigation.navigate('InnerScreen', {
         screen: 'ProductDetails',

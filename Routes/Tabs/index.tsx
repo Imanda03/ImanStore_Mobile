@@ -24,7 +24,7 @@ const Tabs = () => {
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
           } else if (route.name === 'Order') {
-            iconName = focused ? 'bag-handle-sharp' : 'bag-handle-outline';
+            iconName = focused ? 'cart' : 'cart-outline';
           } else if (route.name === 'Discover') {
             iconName = focused ? 'storefront' : 'storefront-outline';
           } else {

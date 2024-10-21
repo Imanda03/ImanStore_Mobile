@@ -66,7 +66,6 @@ const SignIn = ({navigation}: any) => {
         }
       },
     });
-    console.log('first', data);
   };
 
   return (

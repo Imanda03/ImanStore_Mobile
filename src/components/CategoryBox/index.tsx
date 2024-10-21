@@ -24,7 +24,7 @@ const CategoryBox: React.FC<HeaderProps> = ({
       <View
         style={[
           styles.imageContainer,
-          isSelected ? {backgroundColor: '#505c55'} : {},
+          isSelected ? {backgroundColor: '#404a44'} : {},
         ]}>
         <Image style={styles.image} source={{uri: image}} />
       </View>
