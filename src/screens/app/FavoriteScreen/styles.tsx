@@ -28,4 +28,15 @@ export const styles = StyleSheet.create({
   products: {
     paddingHorizontal: 12,
   },
+  noFavoritesContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#dcdedc',
+  },
+  noFavoritesText: {
+    fontSize: 18,
+    color: '#555',
+    textAlign: 'center',
+  },
 });

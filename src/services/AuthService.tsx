@@ -12,6 +12,15 @@ interface RegisterInterface {
   role: string;
 }
 
+interface ProfileInterface {
+  authToken: string;
+  userId: number;
+  name: string;
+  email: string;
+  contact: string | number;
+  address: string;
+}
+
 interface loginInterface {
   email: string;
   password: string;
@@ -35,4 +44,31 @@ export const useLogin = () => {
     );
     return response.data;
   });
+};
+
+export const getProfileDetails = async (authToken: string, userId: number) => {
+  const response = await axios.get(
+    `http://192.168.68.173:5000/api/auth/getProfile/${userId}`,
+  );
+  return response.data;
+};
+
+export const updateProfile = async ({
+  authToken,
+  userId,
+  name,
+  email,
+  contact,
+  address,
+}: ProfileInterface) => {
+  const response = await axios.put(
+    `http://192.168.68.173:5000/api/auth/profile/${userId}`,
+    {username: name, email: email, contactNumber: contact, address: address},
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+  );
+  return response.data;
 };

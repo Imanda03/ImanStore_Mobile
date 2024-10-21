@@ -75,7 +75,6 @@ const SignUp = ({navigation}: any) => {
       {...data, role: 'user'},
       {
         onSuccess: async data => {
-          console.log('success', data);
           showToast(data.message, 'success');
           navigation.navigate('SignIn');
           control._defaultValues;

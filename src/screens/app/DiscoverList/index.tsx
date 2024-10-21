@@ -8,6 +8,7 @@ import {useQuery} from 'react-query';
 import FavoriteList from '../../../components/FavouriteList';
 
 interface ProductItem {
+  id: string | number;
   title: string;
   images: string;
   categoryName: any;
@@ -21,10 +22,9 @@ interface RenderProductItemProps {
 }
 
 const DiscoverList = ({navigation, route}: any) => {
-  const {authToken} = useAuth();
+  const {authToken, userId} = useAuth();
 
   const routeData = route.params;
-  console.log('route', routeData);
 
   const {data: discoverList, error: productError} = useQuery(
     ['discoverList', authToken],
@@ -33,8 +33,6 @@ const DiscoverList = ({navigation, route}: any) => {
       enabled: !!authToken,
     },
   );
-
-  console.log('discover list', discoverList);
 
   const goBack = () => {
     navigation.goBack();
@@ -47,7 +45,14 @@ const DiscoverList = ({navigation, route}: any) => {
         params: product,
       });
     };
-    return <FavoriteList onPress={() => onProductPress(item)} {...item} />;
+    return (
+      <FavoriteList
+        authToken={authToken}
+        onPress={() => onProductPress(item)}
+        {...item}
+        userId={userId}
+      />
+    );
   };
 
   return (
