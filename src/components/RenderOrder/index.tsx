@@ -1,29 +1,56 @@
-import {View, Text, Image} from 'react-native';
-import React from 'react';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
+import React, {useEffect} from 'react';
 import {styles} from './styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 interface OrderProps {
-  image: string;
+  images: string[];
   title: string;
-  category: string;
+  category: {title: string};
   status?: string;
   onPress?: () => void;
+  description?: string;
+  price?: number | string;
+  quantity?: number;
+  productId: number;
+  currentQuantity: number;
+  onQuantityChange: (quantity: number) => void;
 }
 
 const RenderOrder: React.FC<OrderProps> = ({
-  image,
+  images,
   title,
   category,
   status,
+  description,
+  price,
+  quantity: maxQuantity,
+  productId,
+  currentQuantity,
+  onQuantityChange,
 }) => {
+  const truncatedDescription =
+    description && description.length > 60
+      ? description.substring(0, 60) + '...'
+      : description;
+
+  const increaseQuantity = () => {
+    onQuantityChange(currentQuantity + 1);
+  };
+
+  const decreaseQuantity = () => {
+    if (currentQuantity > 1) {
+      onQuantityChange(currentQuantity - 1);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image
         style={styles.image}
         source={{
-          uri: image,
+          uri: images?.[0],
         }}
       />
       <View style={styles.secondContainer}>
@@ -32,17 +59,28 @@ const RenderOrder: React.FC<OrderProps> = ({
 
           <View style={styles.categoryContainer}>
             <MaterialIcons name="category" size={16} color="#031a03" />
-            <Text style={styles.categoryTitle}> {category}</Text>
+            <Text style={styles.categoryTitle}> {category.title}</Text>
           </View>
         </View>
-        <Text style={styles.status}>Delivery</Text>
+        <Text style={styles.description}> {truncatedDescription}</Text>
+        <Text style={styles.title}>Rs. {price}</Text>
+        <View style={styles.footer}>
+          <TouchableOpacity
+            onPress={decreaseQuantity}
+            disabled={currentQuantity === 1}
+            style={{opacity: currentQuantity === 1 ? 0.5 : 1}}>
+            <AntDesign name="minuscircleo" size={20} color="#031a03" />
+          </TouchableOpacity>
+
+          <Text style={styles.title}>{currentQuantity}</Text>
+          <TouchableOpacity
+            onPress={increaseQuantity}
+            disabled={currentQuantity === maxQuantity}
+            style={{opacity: currentQuantity === maxQuantity ? 0.5 : 1}}>
+            <AntDesign name="pluscircleo" size={20} color="#031a03" />
+          </TouchableOpacity>
+        </View>
       </View>
-      <Ionicons
-        style={styles.icon}
-        name="arrow-redo-circle-sharp"
-        size={30}
-        color="black"
-      />
     </View>
   );
 };

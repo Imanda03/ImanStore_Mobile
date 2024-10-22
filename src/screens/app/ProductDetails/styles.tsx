@@ -85,4 +85,14 @@ export const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
+  stock: {
+    backgroundColor: '#8f918e',
+    height: 30,
+    maxWidth: 90,
+    textAlign: 'center',
+    paddingTop: 5,
+    borderRadius: 10,
+    fontWeight: '600',
+    color: '#f0d02b',
+  },
 });

@@ -21,6 +21,7 @@ import ButtonWithIcon from '../../../components/core/ButtonWithIcon';
 import InfoModal from '../../../components/core/InfoModal';
 import SelectComponent from '../../../components/core/Select';
 import {styles} from './styles';
+import {addOrder} from '../../../services/OrderService';
 
 const ProductDetails = ({route, navigation}: any) => {
   const product = route?.params || {};
@@ -31,6 +32,15 @@ const ProductDetails = ({route, navigation}: any) => {
   const onBackPress = () => {
     navigation.goBack();
   };
+
+  const {
+    mutate: AddOrder,
+    isLoading: orderLogin,
+    isError,
+    error,
+  } = addOrder(authToken);
+
+  console.log('first', process.env.BASE_URL);
 
   const {data: favoriteData} = useQuery(
     ['checkFavourite', userId, product?.id],
@@ -82,16 +92,6 @@ const ProductDetails = ({route, navigation}: any) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [quantity, setQuantity] = useState(1); // State for quantity
 
-  const handleSelect = (value: string | number) => {
-    console.log('Selected value:', value);
-  };
-
-  const options = [
-    {label: 'Option 1', value: 1},
-    {label: 'Option 2', value: 2},
-    {label: 'Option 3', value: 3},
-  ];
-
   const handleOpenModal = () => {
     setIsModalVisible(true);
   };
@@ -101,8 +101,30 @@ const ProductDetails = ({route, navigation}: any) => {
   };
 
   const handleSubmitModal = () => {
-    console.log('Submit button pressed with quantity:', quantity);
-    setIsModalVisible(!isModalVisible); // Close modal after submit action
+    const data: any = {
+      userId: userId,
+      productId: product.id,
+      status: 'created',
+    };
+    AddOrder(data, {
+      onSuccess: async data => {
+        console.log('message', data);
+        showToast(data.message, 'success');
+        queryClient.invalidateQueries('progressOrder', userId);
+
+        setIsModalVisible(!isModalVisible);
+      },
+      onError: (error: any) => {
+        if (error?.response?.data) {
+          const backendMessage = error.response.data.message;
+          setIsModalVisible(!isModalVisible);
+
+          showToast(backendMessage, 'error');
+        } else {
+          showToast('Network error or server is down', 'error');
+        }
+      },
+    });
   };
 
   // const increaseQuantity = () => {
@@ -125,6 +147,7 @@ const ProductDetails = ({route, navigation}: any) => {
         <View style={styles.content}>
           <Text style={styles.title}>{product.title}</Text>
           <Text style={styles.price}>Rs. {product.price}</Text>
+          <Text style={styles.stock}>{`${product.quantity} on stock`}</Text>
           <Text style={styles.descrisption}>{product.description}</Text>
         </View>
         <TouchableOpacity onPress={onBackPress} style={styles.backContainer}>
