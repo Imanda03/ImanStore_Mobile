@@ -71,6 +71,8 @@ const HomeScreen = ({navigation}: any) => {
     }
   }, [productData]);
 
+  console.log('check env==> ', process.env.BASE_URL);
+
   useEffect(() => {
     if (selectedCategory && !keyword) {
       const updatedProduct = productData?.products.filter(

@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     gap: 20,
   },
   image: {
-    height: 90,
+    height: '100%',
     width: '35%',
     borderRadius: 25,
   },
@@ -50,5 +50,18 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 10,
+  },
+  description: {
+    fontSize: 10,
+    fontWeight: '500',
+    color: '#80857f',
+    width: '70%',
+    textAlign: 'justify',
+    marginVertical: 5,
+  },
+  footer: {
+    marginVertical: 10,
+    flexDirection: 'row',
+    gap: 15,
   },
 });

@@ -32,7 +32,7 @@ const index = ({title, onCancel, onConfirm, modalVisible}: InfoModalType) => {
               style={{
                 height: 40,
                 backgroundColor: '#334d31',
-                width: 90,
+                width: 110,
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: 15,
@@ -44,7 +44,7 @@ const index = ({title, onCancel, onConfirm, modalVisible}: InfoModalType) => {
               onPress={onCancel}
               style={{
                 height: 40,
-                width: 90,
+                width: 110,
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: 15,
