@@ -44,8 +44,6 @@ const FavoriteList: React.FC<ProductProps> = ({
 
   const isFavorite = favoriteData?.exists;
 
-  console.log('isFavorite', isFavorite);
-
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <Image

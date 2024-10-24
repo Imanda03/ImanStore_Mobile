@@ -16,6 +16,7 @@ interface OrderProps {
   productId: number;
   currentQuantity: number;
   onQuantityChange: (quantity: number) => void;
+  onDeleteOrder?: () => void;
 }
 
 const RenderOrder: React.FC<OrderProps> = ({
@@ -29,6 +30,7 @@ const RenderOrder: React.FC<OrderProps> = ({
   productId,
   currentQuantity,
   onQuantityChange,
+  onDeleteOrder,
 }) => {
   const truncatedDescription =
     description && description.length > 60
@@ -42,6 +44,12 @@ const RenderOrder: React.FC<OrderProps> = ({
   const decreaseQuantity = () => {
     if (currentQuantity > 1) {
       onQuantityChange(currentQuantity - 1);
+    }
+  };
+
+  const handleDelete = () => {
+    if (onDeleteOrder) {
+      onDeleteOrder();
     }
   };
 
@@ -64,20 +72,25 @@ const RenderOrder: React.FC<OrderProps> = ({
         </View>
         <Text style={styles.description}> {truncatedDescription}</Text>
         <Text style={styles.title}>Rs. {price}</Text>
-        <View style={styles.footer}>
-          <TouchableOpacity
-            onPress={decreaseQuantity}
-            disabled={currentQuantity === 1}
-            style={{opacity: currentQuantity === 1 ? 0.5 : 1}}>
-            <AntDesign name="minuscircleo" size={20} color="#031a03" />
-          </TouchableOpacity>
+        <View style={styles.footerContainer}>
+          <View style={styles.footer}>
+            <TouchableOpacity
+              onPress={decreaseQuantity}
+              disabled={currentQuantity === 1}
+              style={{opacity: currentQuantity === 1 ? 0.5 : 1}}>
+              <AntDesign name="minuscircleo" size={26} color="#031a03" />
+            </TouchableOpacity>
 
-          <Text style={styles.title}>{currentQuantity}</Text>
-          <TouchableOpacity
-            onPress={increaseQuantity}
-            disabled={currentQuantity === maxQuantity}
-            style={{opacity: currentQuantity === maxQuantity ? 0.5 : 1}}>
-            <AntDesign name="pluscircleo" size={20} color="#031a03" />
+            <Text style={styles.title}>{currentQuantity}</Text>
+            <TouchableOpacity
+              onPress={increaseQuantity}
+              disabled={currentQuantity === maxQuantity}
+              style={{opacity: currentQuantity === maxQuantity ? 0.5 : 1}}>
+              <AntDesign name="pluscircleo" size={26} color="#031a03" />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={handleDelete}>
+            <AntDesign name="closecircleo" size={26} color="#872d2d" />
           </TouchableOpacity>
         </View>
       </View>
