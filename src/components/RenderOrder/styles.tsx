@@ -60,8 +60,13 @@ export const styles = StyleSheet.create({
     marginVertical: 5,
   },
   footer: {
-    marginVertical: 10,
     flexDirection: 'row',
     gap: 15,
+  },
+  footerContainer: {
+    marginVertical: 10,
+    flexDirection: 'row',
+    width: '70%',
+    justifyContent: 'space-between',
   },
 });
