@@ -3,13 +3,14 @@ import {StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
   topView: {
     backgroundColor: '#2d3b37',
-    height: 160,
+    height: 140,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderEndEndRadius: 20,
     borderBottomStartRadius: 20,
+    padding: 5,
   },
   textContainer: {
     marginHorizontal: 15,
@@ -20,15 +21,18 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
   },
   input: {
-    height: 60,
+    height: 50,
     width: '85%',
-    borderRadius: 10,
+    borderRadius: 20,
+    borderTopEndRadius: 20,
+    borderTopStartRadius: 20,
+
     backgroundColor: '#c7d6cd',
     alignSelf: 'center',
     justifyContent: 'center',
   },
   list: {
-    paddingVertical: 24,
+    paddingVertical: 5,
   },
   recommendedContainer: {
     display: 'flex',
@@ -38,7 +42,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   recommendedText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#2d3b37',
   },
@@ -49,5 +53,7 @@ export const styles = StyleSheet.create({
   },
   products: {
     paddingHorizontal: 12,
+    // gap: 10,
+    justifyContent: 'space-around',
   },
 });

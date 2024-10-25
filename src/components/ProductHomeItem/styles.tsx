@@ -2,66 +2,52 @@ import {Dimensions, StyleSheet} from 'react-native';
 // import {colors} from '../../utils/color';
 
 const {width} = Dimensions.get('window');
+const ITEM_WIDTH = (width - 32) / 3.3;
 
 export const styles = StyleSheet.create({
   container: {
-    margin: 8,
-  },
-  title: {
-    color: '#515452',
-    paddingVertical: 8,
-    fontWeight: '500',
-  },
-  image: {
-    width: (width - 50) / 2,
-    height: 200,
-    borderRadius: 8,
-  },
-  price: {
-    color: '#010d05',
-    paddingBottom: 8,
-    fontWeight: '600',
-    fontSize: 16,
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
+    width: ITEM_WIDTH,
+    backgroundColor: '#f7faf7',
+    borderRadius: 6,
+    marginHorizontal: 3,
+    marginVertical: 4,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+    overflow: 'hidden',
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
+  pressed: {
+    opacity: 0.9,
+    transform: [{scale: 0.97}],
   },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
+  imageContainer: {
+    width: '100%',
+    height: ITEM_WIDTH, // Square image
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    overflow: 'hidden',
   },
-  buttonClose: {
-    backgroundColor: '#2196F3',
+  image: {
+    width: '100%',
+    height: '100%',
   },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+  contentContainer: {
+    padding: 4,
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+  title: {
+    color: '#515452',
+    fontSize: 10,
+    fontWeight: '500',
+    marginBottom: 2,
+  },
+  price: {
+    color: '#010d05',
+    fontWeight: '600',
+    fontSize: 11,
   },
 });

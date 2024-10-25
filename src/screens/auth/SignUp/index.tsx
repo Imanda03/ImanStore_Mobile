@@ -19,6 +19,7 @@ import Toast from '../../../components/core/Toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../../../Context';
 import {useToast} from '../../../Context/ToastContext';
+import {colors} from '../../../utils/colors';
 
 type FormData = {
   username: string;
@@ -103,7 +104,8 @@ const SignUp = ({navigation}: any) => {
   };
 
   return (
-    <KeyboardAvoidingView style={{backgroundColor: '#dcdedc', height: '100%'}}>
+    <KeyboardAvoidingView
+      style={{backgroundColor: colors.background.auth, height: '100%'}}>
       <ScrollView>
         <AuthHeader onBackPress={() => navigation.goBack()} title="Sign Up" />
         <View style={styles.container}>

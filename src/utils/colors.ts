@@ -1,10 +1,19 @@
 export const colors = {
-  primary: '#c9d6cd',
-  backgroundcolor: '#FFF0D1',
-  borderColor: '#664343',
-  alert: '795757',
-  gray: '#8D9BB5',
-  lightGray: '#DADADA',
-  darkGrey: '#393646',
-  textGrey: '#606060',
+  button: {
+    primary: '#232e23',
+    secondary: '#e3e1dc',
+  },
+  text: {
+    primary: '#262b26',
+    whitePrimary: '#f7fcf5',
+    headerTitle: 'wheat',
+    dark: '#0a0a0a',
+    grayPrimary: '#7b877b',
+    error: '#ab0017',
+  },
+  background: {
+    primary: '#e8e8e8',
+    input: '#dcdedc',
+    auth: '#98a398',
+  },
 };

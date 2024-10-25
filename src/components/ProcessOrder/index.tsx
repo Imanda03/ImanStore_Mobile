@@ -4,8 +4,9 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  Animated,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import RenderOrder from '../RenderOrder';
 import {styles} from './styles';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -18,44 +19,55 @@ import {
   fetchPaymentSheetParams,
   PaymentSaved,
 } from '../../services/PaymentService';
+import {useAnimationUtils} from '../../utils/animationUtils';
+
+interface Product {
+  id: number;
+  title: string;
+  images: string[];
+  category: {title: string};
+  price: string;
+  description?: string;
+  quantity?: number;
+}
 
 interface ProductItem {
   id: number;
-  products: {
-    id: number;
-    title: string;
-    images: string[];
-    category: {title: string};
-    price: string;
-    description?: string;
-    quantity?: number;
-  };
+  products: Product;
 }
 
 interface OrderQuantity {
-  [key: number]: {orderId: number; productId: number; quantity: number};
+  [key: number]: {
+    orderId: number;
+    productId: number;
+    quantity: number;
+  };
 }
 
 const ProcessOrder = ({navigation}: any) => {
   const {authToken, userId} = useAuth();
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [orderQuantities, setOrderQuantities] = useState<OrderQuantity>({});
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
   const {showToast} = useToast();
   const {initPaymentSheet, presentPaymentSheet} = useStripe();
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    // Refetch data when refreshing
-    refetch().finally(() => setRefreshing(false));
-  }, []);
+  const headerAnimation = useRef(new Animated.Value(0)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+  const buttonShake = useRef(new Animated.Value(0)).current;
+  const listItemAnimations = useRef<{[key: string]: Animated.Value}>(
+    {},
+  ).current;
 
+  const {fadeIn, slideIn, pulse, shake} = useAnimationUtils();
+
+  // Fetch orders query
   const {
     data: progressOrderList,
     error,
     isLoading,
-    refetch, // Extract refetch function from useQuery to call on refresh
+    refetch,
   } = useQuery(
     ['progressOrder', authToken],
     () => getOrder(authToken, userId),
@@ -64,30 +76,48 @@ const ProcessOrder = ({navigation}: any) => {
     },
   );
 
+  // Payment mutations
   const {mutate: PaymentSheet, isLoading: paymentLoading} =
     fetchPaymentSheetParams(authToken);
-
   const {mutate: paymentSaved, isLoading: paymentSavedLoading} =
     PaymentSaved(authToken);
 
+  // Delete order mutation
+  const {mutate: deleteOrder} = useMutation(
+    (orderId: number) => deleteUserOrder(authToken, orderId),
+    {
+      onSuccess: data => {
+        queryClient.invalidateQueries('progressOrder');
+        showToast(data.message, 'success');
+      },
+      onError: (error: any) => {
+        const message =
+          error?.response?.data?.message || 'Network error or server is down';
+        showToast(message, 'error');
+      },
+    },
+  );
+
+  // Initialize order quantities
   useEffect(() => {
     if (progressOrderList?.orders) {
-      const initialQuantities: OrderQuantity = {};
-      progressOrderList.orders.forEach((item: ProductItem) => {
-        initialQuantities[item.products.id] = {
-          orderId: item.id,
-          productId: item.products.id,
-          quantity: 1, // default to 1 or whatever the initial quantity is
-        };
+      progressOrderList.orders.forEach((item: ProductItem, index: number) => {
+        if (!listItemAnimations[item.id]) {
+          listItemAnimations[item.id] = new Animated.Value(0);
+          // Stagger the animations
+          setTimeout(() => {
+            slideIn(listItemAnimations[item.id]);
+          }, index * 100);
+        }
       });
-      setOrderQuantities(initialQuantities);
     }
   }, [progressOrderList?.orders]);
 
+  // Calculate total price
   useEffect(() => {
     if (progressOrderList?.orders) {
       const newTotal = progressOrderList.orders.reduce(
-        (sum: any, item: any) => {
+        (sum: number, item: ProductItem) => {
           const product = orderQuantities[item.products.id];
           const quantity = product ? product.quantity : 1;
           return sum + Number(item.products.price) * quantity;
@@ -106,43 +136,15 @@ const ProcessOrder = ({navigation}: any) => {
     setOrderQuantities(prev => ({
       ...prev,
       [productId]: {
-        ...prev[productId], // maintain the orderId and productId
-        quantity: newQuantity, // update only the quantity
+        ...prev[productId],
+        quantity: newQuantity,
       },
     }));
   };
 
-  const renderProductItem = ({
-    item,
-    index,
-  }: {
-    item: ProductItem;
-    index: number;
-  }) => {
-    const onProductPress = (product: any) => {
-      navigation.navigate('InnerScreen', {
-        screen: 'ProductDetails',
-        params: product,
-      });
-    };
-
-    return (
-      <RenderOrder
-        onPress={() => onProductPress(item?.products)}
-        {...item?.products}
-        productId={item.products.id}
-        currentQuantity={
-          orderQuantities[item.products.id]?.quantity || 1 // Use the quantity from the new structure
-        }
-        onQuantityChange={
-          newQuantity =>
-            handleQuantityChange(item.products.id, item.id, newQuantity) // Pass both productId and orderId
-        }
-        onDeleteOrder={() => handleDeleteOrder(item.id)}
-      />
-    );
+  const handlePaymentError = () => {
+    shake(buttonShake);
   };
-  console.log(orderQuantities);
 
   const handlePayment = async () => {
     try {
@@ -160,7 +162,6 @@ const ProcessOrder = ({navigation}: any) => {
           });
 
           if (initError) {
-            console.error('initPaymentSheet Error', initError.message);
             showToast(initError.message, 'error');
             return;
           }
@@ -168,134 +169,118 @@ const ProcessOrder = ({navigation}: any) => {
           const {error: presentError}: any = await presentPaymentSheet();
 
           if (presentError) {
-            console.error('presentPaymentSheet Error', presentError.message);
             showToast(presentError.message, 'error');
             return;
-          } else {
-            const payloadData = {
-              customerId: data.customer,
-              ephemeralKey: data.ephemeralKey,
-              paymentIntent: data.paymentIntent,
-              totalPayment: totalPrice,
-              orderQuantities: orderQuantities,
-              userId: userId,
-            };
-
-            await paymentSaved(payloadData, {
-              onSuccess: async data => {
-                showToast(data.message, 'success');
-                queryClient.invalidateQueries('progressOrder');
-              },
-              onError: (error: any) => {
-                console.error('PaymentSheet Error', error.message);
-                showToast(error.message, 'error');
-              },
-            });
           }
+
+          const payloadData = {
+            customerId: data.customer,
+            ephemeralKey: data.ephemeralKey,
+            paymentIntent: data.paymentIntent,
+            totalPayment: totalPrice,
+            orderQuantities: orderQuantities,
+            userId: userId,
+          };
+
+          await paymentSaved(payloadData, {
+            onSuccess: data => {
+              showToast(data.message, 'success');
+              queryClient.invalidateQueries('progressOrder');
+              queryClient.invalidateQueries('completedOrder');
+            },
+            onError: (error: any) => {
+              showToast(error.message, 'error');
+            },
+          });
         },
         onError: (error: any) => {
-          console.error('PaymentSheet Error', error.message);
+          handlePaymentError();
           showToast(error.message, 'error');
         },
       });
     } catch (err) {
-      console.error('handlePayment Error', err);
+      handlePaymentError();
       showToast('An unexpected error occurred', 'error');
     }
   };
 
-  const {mutate: deleteOrder} = useMutation(
-    (orderId: number) => deleteUserOrder(authToken, orderId),
-    {
-      onSuccess: data => {
-        // Invalidate and refetch orders after deletion
-        queryClient.invalidateQueries('progressOrder');
-        showToast(data.message, 'success');
-      },
-      onError: (error: any) => {
-        if (error?.response?.data) {
-          const backendMessage = error.response.data.message;
-          showToast(backendMessage, 'error');
-        } else {
-          showToast('Network error or server is down', 'error');
-        }
-      },
-    },
-  );
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refetch().finally(() => setRefreshing(false));
+  }, [refetch]);
 
-  const handleDeleteOrder = (orderId: number) => {
-    deleteOrder(orderId);
+  const renderProductItem = ({
+    item,
+    index,
+  }: {
+    item: ProductItem;
+    index: number;
+  }) => {
+    const onProductPress = (product: Product) => {
+      navigation.navigate('InnerScreen', {
+        screen: 'ProductDetails',
+        params: product,
+      });
+    };
+
+    if (!listItemAnimations[item.id]) {
+      listItemAnimations[item.id] = new Animated.Value(0);
+    }
+
+    return (
+      <RenderOrder
+        onPress={() => onProductPress(item.products)}
+        {...item.products}
+        productId={item.products.id}
+        currentQuantity={orderQuantities[item.products.id]?.quantity || 1}
+        onQuantityChange={newQuantity =>
+          handleQuantityChange(item.products.id, item.id, newQuantity)
+        }
+        onDeleteOrder={() => deleteOrder(item.id)}
+      />
+    );
   };
 
   return (
-    <View>
-      <View style={styles.header}>
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            marginVertical: 10,
-            color: 'black',
-          }}>
-          Rs. {totalPrice}
-        </Text>
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 15,
-            width: '50%',
-            height: '80%',
-            paddingHorizontal: 10,
-            borderRadius: 20,
-            borderWidth: 1,
-            borderColor: '#6e4d4d',
-          }}
-          onPress={handlePayment}>
-          {paymentLoading ? (
-            <>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: '800',
-                  marginVertical: 10,
-                  color: '#6e4d4d',
-                }}>
-                Please Wait...
-              </Text>
-              <ActivityIndicator size="small" color="#6e4d4d" />
-            </>
-          ) : (
-            <>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: '800',
-                  marginVertical: 10,
-                  color: '#6e4d4d',
-                }}>
-                Proceed To Payment
-              </Text>
-              <FontAwesomeIcon
-                name="arrow-circle-right"
-                color="#6e4d4d"
-                size={24}
-              />
-            </>
-          )}
-        </TouchableOpacity>
-      </View>
+    <View style={styles.container}>
+      {progressOrderList?.orders?.length > 0 && (
+        <View style={styles.header}>
+          <Text style={styles.totalPrice}>Rs. {totalPrice}</Text>
+          <TouchableOpacity
+            style={styles.paymentButton}
+            onPress={() => {
+              pulse(buttonScale);
+              handlePayment();
+            }}>
+            {paymentLoading ? (
+              <>
+                <Text style={styles.buttonText}>Please Wait...</Text>
+                <ActivityIndicator size="small" color="#6e4d4d" />
+              </>
+            ) : (
+              <>
+                <Text style={styles.buttonText}>Proceed To Payment</Text>
+                <FontAwesomeIcon
+                  name="arrow-circle-right"
+                  color="#6e4d4d"
+                  size={24}
+                />
+              </>
+            )}
+          </TouchableOpacity>
+        </View>
+      )}
       <FlatList
         numColumns={1}
         data={progressOrderList?.orders}
         renderItem={renderProductItem}
-        keyExtractor={(item: any) => String(item.id)}
-        ListFooterComponent={<View style={{height: 200}} />}
+        keyExtractor={item => String(item.id)}
+        ListFooterComponent={<View style={styles.footer} />}
         refreshing={refreshing}
         onRefresh={onRefresh}
         ListEmptyComponent={
-          <View>
-            <Text style={{color: 'black'}}>No Order Yet</Text>
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No Orders</Text>
           </View>
         }
       />

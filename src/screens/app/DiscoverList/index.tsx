@@ -10,7 +10,7 @@ import FavoriteList from '../../../components/FavouriteList';
 interface ProductItem {
   id: string | number;
   title: string;
-  images: string;
+  images: string[];
   categoryName: any;
   price: string;
   description: string;
@@ -23,7 +23,6 @@ interface RenderProductItemProps {
 
 const DiscoverList = ({navigation, route}: any) => {
   const {authToken, userId} = useAuth();
-
   const routeData = route.params;
 
   const {data: discoverList, error: productError} = useQuery(
@@ -45,6 +44,7 @@ const DiscoverList = ({navigation, route}: any) => {
         params: product,
       });
     };
+
     return (
       <FavoriteList
         authToken={authToken}
@@ -55,22 +55,33 @@ const DiscoverList = ({navigation, route}: any) => {
     );
   };
 
+  const ListHeaderComponent = () => (
+    <Header
+      title={routeData?.categoryName || 'Discover'}
+      onBackPress={goBack}
+      showBack
+    />
+  );
+
+  const ListEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>
+        {productError ? 'Error loading products' : 'No products found'}
+      </Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <FlatList
-        // columnWrapperStyle={styles.products}
-        // numColumns={1}
         data={discoverList}
         renderItem={renderProductItem}
-        keyExtractor={(item: any) => String(item.id)}
-        ListFooterComponent={<View style={{height: 200}} />}
-        ListHeaderComponent={
-          <Header
-            title={routeData.categoryTitle}
-            showBack
-            onBackPress={goBack}
-          />
-        }
+        keyExtractor={item => String(item.id)}
+        ListFooterComponent={<View style={styles.footer} />}
+        ListHeaderComponent={ListHeaderComponent}
+        ListEmptyComponent={ListEmptyComponent}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );

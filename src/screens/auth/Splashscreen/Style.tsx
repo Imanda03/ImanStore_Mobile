@@ -1,18 +1,20 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {colors} from '../../../utils/colors';
+
+const {width, height} = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
   bgImage: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   title: {
     fontSize: 40,
     alignSelf: 'center',
     marginTop: 24,
     fontWeight: '800',
-    color: '#f7fcf5',
+    color: colors.text.headerTitle,
   },
   buttonContainer: {
     flexDirection: 'column',
@@ -22,7 +24,16 @@ export const styles = StyleSheet.create({
   content: {
     marginTop: 5,
     marginHorizontal: 10,
-    color: '#e6f2e1',
+    color: colors.text.whitePrimary,
     fontSize: 18,
+  },
+  logoContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    width: width,
+    height: height,
   },
 });

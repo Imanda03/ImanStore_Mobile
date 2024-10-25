@@ -11,10 +11,12 @@ export const styles = StyleSheet.create({
   },
   title: {
     color: '#0e1210',
+    fontSize: 11,
+    fontWeight: '500',
   },
   image: {
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
   },
   imageContainer: {
     backgroundColor: '#819c8c',

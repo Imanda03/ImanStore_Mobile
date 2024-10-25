@@ -12,7 +12,7 @@ interface PaymentPayload {
 export const fetchPaymentSheetParams = (authToken: string) => {
   return useMutation(async (amount: number) => {
     const response = await axios.post(
-      'http://192.168.1.104:5000/api/payment/sheet',
+      'http://192.168.68.173:5000/api/payment/sheet',
       {amount: amount},
       {
         headers: {
@@ -28,7 +28,7 @@ export const fetchPaymentSheetParams = (authToken: string) => {
 export const PaymentSaved = (authToken: string) => {
   return useMutation(async (payloadData: PaymentPayload) => {
     const response = await axios.post(
-      'http://192.168.1.104:5000/api/payment/',
+      'http://192.168.68.173:5000/api/payment/',
       {payloadData},
       {
         headers: {
