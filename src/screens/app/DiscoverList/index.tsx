@@ -11,7 +11,7 @@ interface ProductItem {
   id: string | number;
   title: string;
   images: string[];
-  categoryName: any;
+  category: any;
   price: string;
   description: string;
 }
@@ -38,6 +38,7 @@ const DiscoverList = ({navigation, route}: any) => {
   };
 
   const renderProductItem = ({item, index}: RenderProductItemProps) => {
+    console.log('item', item);
     const onProductPress = (product: any) => {
       navigation.navigate('InnerScreen', {
         screen: 'ProductDetails',
@@ -56,11 +57,7 @@ const DiscoverList = ({navigation, route}: any) => {
   };
 
   const ListHeaderComponent = () => (
-    <Header
-      title={routeData?.categoryName || 'Discover'}
-      onBackPress={goBack}
-      showBack
-    />
+    <Header title={routeData?.categoryTitle} onBackPress={goBack} showBack />
   );
 
   const ListEmptyComponent = () => (

@@ -17,7 +17,7 @@ import {styles} from './styles';
 interface ProductProps {
   title: string;
   images: string[];
-  categoryName: string;
+  category: any;
   price: string;
   description: string;
   onPress: () => void;
@@ -29,7 +29,7 @@ interface ProductProps {
 const FavoriteList: React.FC<ProductProps> = ({
   title,
   images,
-  categoryName,
+  category,
   price,
   description,
   onPress,
@@ -108,10 +108,10 @@ const FavoriteList: React.FC<ProductProps> = ({
     <Animated.View
       style={[
         styles.containerWrapper,
-        {
-          opacity: fadeAnim,
-          // transform: [{scale: scaleAnim}],
-        },
+        // {
+        //   opacity: fadeAnim,
+        //   // transform: [{scale: scaleAnim}],
+        // },
       ]}>
       <Pressable
         onPress={onPress}
@@ -136,7 +136,7 @@ const FavoriteList: React.FC<ProductProps> = ({
 
             <View style={styles.categoryContainer}>
               <MaterialIcons name="category" size={14} color="#82644a" />
-              <Text style={styles.category}>{categoryName}</Text>
+              <Text style={styles.category}>{category?.title}</Text>
             </View>
           </View>
 

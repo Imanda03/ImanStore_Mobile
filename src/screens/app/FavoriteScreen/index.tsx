@@ -24,8 +24,8 @@ interface ProductItem {
   product: {
     id: string | number;
     title: string;
-    images: string;
-    categoryName: any;
+    images: string[];
+    category: any;
     price: string;
     description: string;
   };
@@ -47,8 +47,6 @@ const FavoriteScreen = ({navigation}: any) => {
       enabled: !!authToken,
     },
   );
-
-  console.log('first', favouriteList);
 
   const renderProductItem = ({item, index}: RenderProductItemProps) => {
     const onProductPress = (product: any) => {

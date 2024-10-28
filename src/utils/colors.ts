@@ -13,7 +13,7 @@ export const colors = {
   },
   background: {
     primary: '#e8e8e8',
-    input: '#dcdedc',
-    auth: '#98a398',
+    input: '#ffffff',
+    auth: '#e8e8e8',
   },
 };

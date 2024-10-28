@@ -6,7 +6,7 @@ const {height} = Dimensions.get('window');
 export const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#e9f7ea',
+    backgroundColor: '#FFFF',
   },
   headerBackground: {
     position: 'absolute',

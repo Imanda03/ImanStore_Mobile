@@ -59,13 +59,12 @@ const Header: React.FC<HeaderProps> = ({
           <View style={styles.space} />
         )}
       </View>
-      {showSearchInput ? (
+      {/* {showSearchInput ? (
         <Input
           //   onChangeText={onSearch}
           //   value={keyword}
-          placeholder="Type your keyboard..."
-        />
-      ) : null}
+          placeholder="Type your keyboard..."      />
+      ) : null} */}
     </View>
   );
 };

@@ -140,7 +140,7 @@ const HomeScreen = ({navigation}: any) => {
       <FlatList
         columnWrapperStyle={styles.products}
         numColumns={3}
-        data={filteredProduct}
+        data={filteredProduct && filteredProduct.slice(0, 3)}
         renderItem={renderProductItem}
         keyExtractor={(item: any) => String(item.id)}
         ListEmptyComponent={<Text>No Products Found</Text>}

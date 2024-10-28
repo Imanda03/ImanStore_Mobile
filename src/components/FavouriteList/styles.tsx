@@ -2,21 +2,22 @@ import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   containerWrapper: {
-    marginVertical: 8,
-    marginHorizontal: 20,
+    marginVertical: 5,
+    marginHorizontal: '5%',
+    elevation: 4,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 3,
   },
   container: {
     flexDirection: 'row',
     backgroundColor: '#bdc9be',
     borderRadius: 15,
-    padding: 12,
+    // padding: 12,
     gap: 16,
     alignItems: 'center',
+    minHeight: '10%',
   },
   imageWrapper: {
     position: 'relative',
@@ -27,9 +28,10 @@ export const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.2,
     shadowRadius: 2,
+    height: '100%',
   },
   image: {
-    height: 125,
+    height: 150,
     width: 130,
     borderRadius: 15,
   },
@@ -44,8 +46,9 @@ export const styles = StyleSheet.create({
   secondContainer: {
     flex: 1,
     flexDirection: 'column',
-    gap: 8,
+    // gap: 10,
     justifyContent: 'space-between',
+    padding: 12,
   },
   title: {
     fontSize: 16,
