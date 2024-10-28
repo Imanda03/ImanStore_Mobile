@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native';
 import HomeScreen from '../../src/screens/app/HomeScreen';
 import ProfileScreen from '../../src/screens/app/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -47,7 +47,7 @@ const Tabs = () => {
         },
         tabBarStyle: styles.tabBar,
         tabBarItemStyle: styles.tabBarItem,
-        tabBarIconStyle: styles.tabBarIcon,
+        // tabBarIconStyle: styles.tabBarIcon,
       })}>
       <Tab.Screen
         name="Home"
@@ -88,24 +88,34 @@ const Tabs = () => {
   );
 };
 
-const TabBarButton = ({accessibilityState, children, onPress, label}: any) => {
+const TabBarButton = ({accessibilityState, children, onPress}: any) => {
   const focused = accessibilityState.selected;
+
+  // Animated values for the translation and scale
+  const translateYValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.spring(translateYValue, {
+      toValue: focused ? -1 : 0,
+      useNativeDriver: true,
+    }).start();
+  }, [focused]);
+
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
       style={styles.tabBarButtonContainer}>
-      <View
+      <Animated.View
         style={[
           styles.tabBarButton,
+          {
+            transform: [{translateY: translateYValue}],
+          },
           focused ? styles.tabBarButtonActive : null,
         ]}>
         {children}
-        <Text
-          style={[styles.tabLabel, {color: focused ? '#ffffff' : '#dcdedc'}]}>
-          {label}
-        </Text>
-      </View>
+      </Animated.View>
     </TouchableOpacity>
   );
 };
@@ -124,13 +134,14 @@ const styles = StyleSheet.create({
   tabBarItem: {
     padding: 5,
   },
-  tabBarIcon: {
-    marginTop: 10,
-  },
+  // tabBarIcon: {
+  //   marginTop: 10,
+  // },
   tabLabel: {
     fontSize: 12,
     textAlign: 'center',
     width: 60,
+    marginBottom: 10,
   },
   tabBarButtonContainer: {
     flex: 1,

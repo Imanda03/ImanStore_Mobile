@@ -10,12 +10,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   default: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.button.primary,
   },
   borderOnly: {
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: colors.primary,
+    // borderColor: colors.primary,
   },
   textOnly: {
     backgroundColor: 'transparent',
@@ -24,8 +24,9 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',
+    color: colors.text.whitePrimary,
   },
   textVariant: {
-    color: colors.primary, // Text-only buttons should have the text color set to the primary color.
+    color: colors.text.whitePrimary, // Text-only buttons should have the text color set to the primary color.
   },
 });

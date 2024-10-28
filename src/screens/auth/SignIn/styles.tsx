@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {colors} from '../../../utils/colors';
 
 export const styles = StyleSheet.create({
   container: {
@@ -14,7 +15,7 @@ export const styles = StyleSheet.create({
   greetContent: {
     fontSize: 30,
     fontWeight: '500',
-    color: 'black',
+    color: colors.text.primary,
   },
   textContainer: {
     marginVertical: 30,
@@ -25,15 +26,15 @@ export const styles = StyleSheet.create({
   frontText: {
     fontSize: 18,
     fontWeight: '400',
-    color: '#8e9094',
+    color: colors.text.grayPrimary,
   },
   buttonText: {
     fontSize: 18,
     fontWeight: '500',
-    color: 'black',
+    color: colors.text.primary,
   },
   errorText: {
-    color: 'red',
+    color: colors.text.error,
     fontSize: 12,
     marginTop: -10,
     marginBottom: 10,

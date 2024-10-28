@@ -11,6 +11,7 @@ interface ButtonProps {
   endIconName: string;
   color: string;
   bgColor: string;
+  disabled?: boolean;
 }
 
 const ButtonWithIcon = ({
@@ -21,9 +22,11 @@ const ButtonWithIcon = ({
   endIconName,
   color,
   bgColor,
+  disabled,
 }: ButtonProps) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={[styles.container, {backgroundColor: bgColor}]}
       onPress={onPress}>
       <View style={styles.content}>

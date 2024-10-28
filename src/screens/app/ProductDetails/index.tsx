@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   Image,
   Pressable,
@@ -6,6 +6,9 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Animated,
+  Dimensions,
+  StatusBar,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import FontAwesome from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,7 +22,6 @@ import {useToast} from '../../../Context/ToastContext';
 import ImageCarsousel from '../../../components/core/ImageCarsousel';
 import ButtonWithIcon from '../../../components/core/ButtonWithIcon';
 import InfoModal from '../../../components/core/InfoModal';
-import SelectComponent from '../../../components/core/Select';
 import {styles} from './styles';
 import {addOrder} from '../../../services/OrderService';
 
@@ -29,18 +31,40 @@ const ProductDetails = ({route, navigation}: any) => {
   const queryClient = useQueryClient();
   const {showToast} = useToast();
 
-  const onBackPress = () => {
-    navigation.goBack();
-  };
+  // Animation values
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(50)).current;
+  const bookmarkScale = useRef(new Animated.Value(1)).current;
 
-  const {
-    mutate: AddOrder,
-    isLoading: orderLogin,
-    isError,
-    error,
-  } = addOrder(authToken);
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
-  console.log('first', process.env.BASE_URL);
+  const headerOpacity = scrollY.interpolate({
+    inputRange: [0, 200],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+
+  const contentTranslate = scrollY.interpolate({
+    inputRange: [0, 200],
+    outputRange: [0, -20],
+    extrapolate: 'clamp',
+  });
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const {data: favoriteData} = useQuery(
     ['checkFavourite', userId, product?.id],
@@ -64,19 +88,16 @@ const ProductDetails = ({route, navigation}: any) => {
       onSuccess: data => {
         queryClient.invalidateQueries(['checkFavourite', userId, product?.id]);
         queryClient.invalidateQueries('favouriteList', userId);
-
         queryClient.invalidateQueries([
           'discoverList',
           authToken,
           product?.category_id,
         ]);
-
         showToast(data.message, 'success');
       },
       onError: (error: any) => {
         if (error?.response?.data) {
-          const backendMessage = error.response.data.message;
-          showToast(backendMessage, 'error');
+          showToast(error.response.data.message, 'error');
         } else {
           showToast('Network error or server is down', 'error');
         }
@@ -84,21 +105,27 @@ const ProductDetails = ({route, navigation}: any) => {
     },
   );
 
+  const {mutate: AddOrder, isLoading: orderLoading} = addOrder(authToken);
+
   const handleToggleFavorite = () => {
     const status = isFavorite ? 'remove' : 'add';
+    Animated.sequence([
+      Animated.timing(bookmarkScale, {
+        toValue: 1.2,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(bookmarkScale, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
     mutation.mutate(status);
   };
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [quantity, setQuantity] = useState(1); // State for quantity
-
-  const handleOpenModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
+  const handleOpenModal = () => setIsModalVisible(true);
+  const handleCloseModal = () => setIsModalVisible(false);
 
   const handleSubmitModal = () => {
     const data: any = {
@@ -107,19 +134,15 @@ const ProductDetails = ({route, navigation}: any) => {
       status: 'created',
     };
     AddOrder(data, {
-      onSuccess: async data => {
-        console.log('message', data);
+      onSuccess: data => {
         showToast(data.message, 'success');
         queryClient.invalidateQueries('progressOrder', userId);
-
-        setIsModalVisible(!isModalVisible);
+        setIsModalVisible(false);
       },
       onError: (error: any) => {
+        setIsModalVisible(false);
         if (error?.response?.data) {
-          const backendMessage = error.response.data.message;
-          setIsModalVisible(!isModalVisible);
-
-          showToast(backendMessage, 'error');
+          showToast(error.response.data.message, 'error');
         } else {
           showToast('Network error or server is down', 'error');
         }
@@ -127,43 +150,90 @@ const ProductDetails = ({route, navigation}: any) => {
     });
   };
 
-  // const increaseQuantity = () => {
-  //   setQuantity(prev => prev + 1);
-  // };
-
-  // const decreaseQuantity = () => {
-  //   setQuantity(prev => (prev > 1 ? prev - 1 : 1)); // Prevent negative quantity
-  // };
+  const onBackPress = () => navigation.goBack();
 
   return (
     <SafeAreaView style={styles.safe}>
-      <ScrollView style={styles.container}>
-        {product?.images?.length ? (
-          <ImageCarsousel images={product.images} />
-        ) : (
-          <Image style={styles.Image} source={{uri: product.image}} />
-        )}
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
-        <View style={styles.content}>
+      {/* Animated Header Background */}
+      <Animated.View
+        style={[
+          styles.headerBackground,
+          {
+            opacity: headerOpacity,
+          },
+        ]}
+      />
+
+      <ScrollView
+        style={styles.container}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: false},
+        )}
+        scrollEventThrottle={16}>
+        <Animated.View style={{opacity: fadeAnim}}>
+          {product?.images?.length ? (
+            <ImageCarsousel images={product.images} />
+          ) : (
+            <Image style={styles.Image} source={{uri: product.image}} />
+          )}
+        </Animated.View>
+
+        <Animated.View
+          style={[
+            styles.content,
+            {
+              transform: [
+                {translateY: contentTranslate},
+                {translateY: slideAnim},
+              ],
+              opacity: fadeAnim,
+            },
+          ]}>
           <Text style={styles.title}>{product.title}</Text>
           <Text style={styles.price}>Rs. {product.price}</Text>
-          <Text style={styles.stock}>{`${product.quantity} on stock`}</Text>
-          <Text style={styles.descrisption}>{product.description}</Text>
-        </View>
-        <TouchableOpacity onPress={onBackPress} style={styles.backContainer}>
-          <FontAwesome name="arrow-left" size={20} color="#212b24" />
-        </TouchableOpacity>
+          <View style={styles.stockContainer}>
+            <Text style={styles.stock}>{`${product.quantity} on stock`}</Text>
+          </View>
+          <Text style={styles.description}>{product.description}</Text>
+        </Animated.View>
       </ScrollView>
-      <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.bookmarkContainer}
-          onPress={handleToggleFavorite}>
-          <FontAwesome
-            name={isFavorite ? 'bookmark-multiple' : 'bookmark-off-outline'}
-            size={24}
-            color={isFavorite ? '#ffffff' : '#cdd1ce'}
-          />
-        </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={onBackPress}
+        style={[styles.backContainer, {opacity: 0.9}]}>
+        <FontAwesome name="arrow-left" size={20} color="#212b24" />
+      </TouchableOpacity>
+
+      <Animated.View
+        style={[
+          styles.footer,
+          {
+            transform: [{translateY: slideAnim}],
+            opacity: fadeAnim,
+          },
+        ]}>
+        <Animated.View style={{transform: [{scale: bookmarkScale}]}}>
+          <TouchableOpacity
+            style={[
+              styles.bookmarkContainer,
+              isFavorite && styles.bookmarkContainerActive,
+            ]}
+            onPress={handleToggleFavorite}>
+            <FontAwesome
+              name={isFavorite ? 'bookmark-multiple' : 'bookmark-off-outline'}
+              size={24}
+              color={isFavorite ? '#ffffff' : '#cdd1ce'}
+            />
+          </TouchableOpacity>
+        </Animated.View>
+
         <ButtonWithIcon
           title="Add to Cart"
           startIconName="basket-plus"
@@ -171,8 +241,9 @@ const ProductDetails = ({route, navigation}: any) => {
           color="#cdd1ce"
           bgColor="#212b24"
           onPress={handleOpenModal}
+          disabled={orderLoading}
         />
-      </View>
+      </Animated.View>
 
       <InfoModal
         modalVisible={isModalVisible}

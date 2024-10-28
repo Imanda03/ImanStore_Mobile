@@ -98,6 +98,7 @@ const DiscoverScreen = ({navigation}: any) => {
           </TouchableOpacity>
         </View>
         <FlatList
+          numColumns={2}
           data={filteredProduct}
           renderItem={renderProductItem}
           keyExtractor={(item, index) => String(index)}

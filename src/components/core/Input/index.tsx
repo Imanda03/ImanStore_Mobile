@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, TextInput, Pressable, StyleSheet} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import styles from './styles';
+import {colors} from '../../../utils/colors';
 
 interface InputProps {
   placeholder?: string;
@@ -27,7 +28,7 @@ const InputComponent = ({
       <TextInput
         style={styles.input}
         placeholder={placeholder}
-        placeholderTextColor="#8a968e"
+        placeholderTextColor={colors.text.grayPrimary}
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry && !isPasswordVisible}
@@ -37,7 +38,7 @@ const InputComponent = ({
           <Entypo
             name={isPasswordVisible ? 'eye' : 'eye-with-line'}
             size={20}
-            color="#000"
+            color={colors.button.primary}
           />
         </Pressable>
       )}

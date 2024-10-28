@@ -17,6 +17,7 @@ import * as yup from 'yup';
 import {useLogin} from '../../../services/AuthService';
 import {useToast} from '../../../Context/ToastContext';
 import {useAuth} from '../../../Context';
+import {colors} from '../../../utils/colors';
 
 type FormData = {
   email: string;
@@ -69,7 +70,8 @@ const SignIn = ({navigation}: any) => {
   };
 
   return (
-    <KeyboardAvoidingView style={{backgroundColor: '#dcdedc', height: '100%'}}>
+    <KeyboardAvoidingView
+      style={{backgroundColor: colors.background.auth, height: '100%'}}>
       <AuthHeader onBackPress={() => navigation.goBack()} title="Sign In" />
       <ScrollView style={styles.container}>
         <View style={styles.GreetContainer}>

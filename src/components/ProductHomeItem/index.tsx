@@ -16,10 +16,22 @@ const ProductHomeItem: React.FC<HeaderProps> = ({
   price,
 }) => {
   return (
-    <Pressable onPress={onPress} style={styles.container}>
-      <Image style={styles.image} source={{uri: images[0]}} />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.price}>Rs. {price}</Text>
+    <Pressable
+      onPress={onPress}
+      style={({pressed}) => [styles.container, pressed && styles.pressed]}>
+      <View style={styles.imageContainer}>
+        <Image
+          style={styles.image}
+          source={{uri: images[0]}}
+          resizeMode="cover"
+        />
+      </View>
+      <View style={styles.contentContainer}>
+        <Text numberOfLines={1} style={styles.title}>
+          {title}
+        </Text>
+        <Text style={styles.price}>{price}</Text>
+      </View>
     </Pressable>
   );
 };

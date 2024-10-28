@@ -20,6 +20,7 @@ import {useQuery} from 'react-query';
 import {getCategory} from '../../../services/CategoryService';
 import {useAuth} from '../../../Context';
 import {getProducts} from '../../../services/ProductService';
+import AnimatedBanner from '../../../components/AnimatedBanner';
 
 interface RenderCategoryItemProps {
   item: CategoryItem;
@@ -44,6 +45,7 @@ interface RenderProductItemProps {
   item: ProductItem;
   index: number;
 }
+
 const HomeScreen = ({navigation}: any) => {
   const {authToken} = useAuth();
   const {data: productData, error: productError} = useQuery(
@@ -127,15 +129,32 @@ const HomeScreen = ({navigation}: any) => {
   const handleChangeSearch = (value: string) => {
     setkeyword(value);
   };
+  const bannerImages = [
+    'https://my.canon/media/image/2024/07/29/8d6a2501a74246db963e7ad5d08b3cf0_Buddy+App+Banner_FA-02.jpg',
+    'https://wholesalesuiteplugin.com/wp-content/uploads/2021/10/How-To-Create-A-WooCommerce-Product-List-On-One-Page.png',
+    'https://i.ytimg.com/vi/VejBGcVD7Jw/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBpSejHAm6aJ3EqmwZPQNwpeQrAgg',
+  ];
+
   return (
-    <SafeAreaView style={{backgroundColor: '#dcdedc', height: '100%'}}>
+    <SafeAreaView style={{backgroundColor: '#e8e8e8', height: '100%'}}>
       <FlatList
         columnWrapperStyle={styles.products}
-        numColumns={2}
-        data={filteredProduct}
+        numColumns={3}
+        data={filteredProduct && filteredProduct.slice(0, 3)}
         renderItem={renderProductItem}
         keyExtractor={(item: any) => String(item.id)}
-        ListFooterComponent={<View style={{height: 200}} />}
+        ListEmptyComponent={<Text>No Products Found</Text>}
+        ListFooterComponent={
+          <View>
+            <AnimatedBanner
+              images={bannerImages}
+              onPress={index => {
+                console.log('Banner clicked:', index);
+                // Handle banner press
+              }}
+            />
+          </View>
+        }
         ListHeaderComponent={
           <View style={{flex: 1}}>
             <View style={styles.topView}>
@@ -147,7 +166,7 @@ const HomeScreen = ({navigation}: any) => {
                 source={{
                   uri: 'https://cdn-icons-png.flaticon.com/512/6858/6858504.png',
                 }}
-                size={80}
+                size={55}
                 rounded
                 icon={{name: 'home'}}
               />
@@ -170,12 +189,14 @@ const HomeScreen = ({navigation}: any) => {
               keyExtractor={item => String(item.id)}
             />
 
-            <View style={styles.recommendedContainer}>
-              <Text style={styles.recommendedText}>Recommended for you</Text>
-              <TouchableOpacity>
-                <Text style={styles.recommendedLink}>See All</Text>
-              </TouchableOpacity>
-            </View>
+            {filteredProduct && filteredProduct.length > 0 && (
+              <View style={styles.recommendedContainer}>
+                <Text style={styles.recommendedText}>Recommended for you</Text>
+                <TouchableOpacity>
+                  <Text style={styles.recommendedLink}>See All</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         }
       />

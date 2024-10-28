@@ -10,7 +10,7 @@ interface OrderInterface {
 export const addOrder = (authToken: string) => {
   return useMutation(async (orderData: OrderInterface) => {
     const response = await axios.post(
-      'http://192.168.1.104:5000/api/order/',
+      'http://192.168.68.173:5000/api/order/',
       orderData,
       {
         headers: {
@@ -23,9 +23,9 @@ export const addOrder = (authToken: string) => {
   });
 };
 
-export const getOrder = async (authToken: string, userId: string) => {
+export const getOrder = async (authToken: string, userId: number) => {
   const response = await axios.get(
-    `http://192.168.1.104:5000/api/order/${userId}`,
+    `http://192.168.68.173:5000/api/order/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -37,7 +37,22 @@ export const getOrder = async (authToken: string, userId: string) => {
 
 export const deleteUserOrder = async (authToken: string, orderId: number) => {
   const response = await axios.delete(
-    `http://192.168.1.104:5000/api/order/${orderId}`,
+    `http://192.168.68.173:5000/api/order/${orderId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+  );
+  return response.data;
+};
+
+export const fetchUserCompletedOrder = async (
+  authToken: string,
+  userId: number,
+) => {
+  const response = await axios.get(
+    `http://192.168.68.173:5000/api/order/successPayment/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${authToken}`,

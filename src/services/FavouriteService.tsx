@@ -15,7 +15,7 @@ export const checkFavourite = async (
   data: CheckFavourite,
 ) => {
   const response = await axios.get(
-    `http://192.168.1.104:5000/api/favourite/check/${data.userId}/${data.productId}`,
+    `http://192.168.68.173:5000/api/favourite/check/${data.userId}/${data.productId}`,
     {
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -31,7 +31,7 @@ export const toggleFavourite = async (
   data: CheckFavourite,
 ) => {
   const response = await axios.put(
-    'http://192.168.1.104:5000/api/favourite',
+    'http://192.168.68.173:5000/api/favourite',
     {
       userId: data.userId,
       productId: data.productId,
@@ -49,7 +49,7 @@ export const toggleFavourite = async (
 
 export const getFavouriteList = async (authToken: string, userId: number) => {
   const response = await axios.get(
-    `http://192.168.1.104:5000/api/favourite/${userId}`,
+    `http://192.168.68.173:5000/api/favourite/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${authToken}`,
