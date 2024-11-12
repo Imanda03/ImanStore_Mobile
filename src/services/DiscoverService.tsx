@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const getDiscover = async (authToken: string) => {
-  const response = await axios.get('http://192.168.68.173:5000/api/discover/', {
+  const response = await axios.get('http://192.168.1.104:5000/api/discover/', {
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -14,7 +14,7 @@ export const getDiscoverList = async (
   id: string | number,
 ) => {
   const response = await axios.get(
-    `http://192.168.68.173:5000/api/discover/${id}`,
+    `http://192.168.1.104:5000/api/discover/${id}`,
     {
       headers: {
         Authorization: `Bearer ${authToken}`,

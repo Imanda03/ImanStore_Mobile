@@ -63,6 +63,7 @@ const SignIn = ({navigation}: any) => {
           showToast(backendMessage, 'error');
         } else {
           // Handle generic error cases
+          console.log('error', error.message);
           showToast('Network error or server is down', 'error');
         }
       },
