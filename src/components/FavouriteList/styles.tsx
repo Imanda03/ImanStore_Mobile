@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     // padding: 12,
     gap: 16,
     alignItems: 'center',
-    minHeight: '10%',
+    // minHeight: '10%',
   },
   imageWrapper: {
     position: 'relative',
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
     height: '100%',
   },
   image: {
-    height: 150,
+    height: 140,
     width: 130,
     borderRadius: 15,
   },
