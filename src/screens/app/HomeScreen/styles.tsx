@@ -40,6 +40,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 15,
     alignItems: 'center',
+    marginBottom: 10,
   },
   recommendedText: {
     fontSize: 14,
@@ -53,7 +54,7 @@ export const styles = StyleSheet.create({
   },
   products: {
     paddingHorizontal: 12,
-    // gap: 10,
+    gap: 5,
     justifyContent: 'space-around',
   },
 });

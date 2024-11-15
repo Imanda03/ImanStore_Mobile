@@ -88,6 +88,7 @@ const ProductDetails = ({route, navigation}: any) => {
       onSuccess: data => {
         queryClient.invalidateQueries(['checkFavourite', userId, product?.id]);
         queryClient.invalidateQueries('favouriteList', userId);
+        queryClient.invalidateQueries('recommendedProducts', authToken, userId);
         queryClient.invalidateQueries([
           'discoverList',
           authToken,

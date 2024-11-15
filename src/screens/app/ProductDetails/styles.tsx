@@ -6,7 +6,7 @@ const {height} = Dimensions.get('window');
 export const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#FFFF',
+    // backgroundColor: '#FFFF',
   },
   headerBackground: {
     position: 'absolute',
@@ -18,9 +18,11 @@ export const styles = StyleSheet.create({
     zIndex: 1,
   },
   footer: {
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     width: '90%',
     backgroundColor: 'transparent',
   },
@@ -32,18 +34,19 @@ export const styles = StyleSheet.create({
     height: height * 0.45,
   },
   content: {
-    backgroundColor: '#f2fcf3',
+    backgroundColor: '#DFF2EB',
     borderTopRightRadius: 24,
     borderTopLeftRadius: 24,
     marginTop: -40,
     paddingHorizontal: 24,
     paddingTop: 32,
-    paddingBottom: 100,
+    paddingBottom: 50,
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: -2},
     shadowOpacity: 0.1,
     shadowRadius: 8,
+    minHeight: '100%',
   },
   title: {
     marginTop: 8,
