@@ -66,6 +66,55 @@ const CompletedOrder = ({navigation}: any) => {
         renderItem={renderProductItem}
         keyExtractor={(item: any) => String(item.id)}
         ListFooterComponent={<View style={{height: 200}} />}
+        ListHeaderComponent={
+          <View
+            style={{
+              marginHorizontal: 15,
+              marginVertical: 10,
+            }}>
+            {orderCompletedList?.orders.length === 0 && (
+              <Text
+                style={{
+                  marginHorizontal: 15,
+                  color: 'black',
+                  top: 10,
+                  fontWeight: 'bold',
+                }}>
+                Your products are on their way to you!
+              </Text>
+            )}
+          </View>
+        }
+        ListEmptyComponent={
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 20,
+              top: 50,
+            }}>
+            <Text
+              style={{
+                color: 'gray',
+                fontSize: 18,
+                textAlign: 'center',
+                fontWeight: 'bold',
+                marginBottom: 10,
+              }}>
+              No orders yet!
+            </Text>
+            <Text
+              style={{
+                color: 'gray',
+                fontSize: 14,
+                textAlign: 'center',
+              }}>
+              Your products will appear here once you've placed an order. Browse
+              our store and start shopping today!
+            </Text>
+          </View>
+        }
       />
     </View>
   );

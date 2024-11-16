@@ -121,8 +121,9 @@ const SignIn = ({navigation}: any) => {
           </TouchableOpacity>
         </View>
         <ButtonComponent
-          title="Register now"
+          title="Login"
           onPress={handleSubmit(onSubmit)}
+          loading={isLoading}
         />
       </ScrollView>
     </KeyboardAvoidingView>

@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 import React from 'react';
 import {styles} from './style';
 
@@ -7,6 +7,7 @@ interface ButtonProps {
   onPress?: (value: any) => void;
   style?: any;
   variant?: 'default' | 'borderOnly' | 'text';
+  loading?: boolean;
 }
 
 const ButtonComponent = ({
@@ -14,6 +15,7 @@ const ButtonComponent = ({
   onPress,
   style,
   variant = 'default',
+  loading,
 }: ButtonProps) => {
   const getVariantStyle = () => {
     switch (variant) {
@@ -31,9 +33,19 @@ const ButtonComponent = ({
       activeOpacity={0.6}
       style={[styles.container, getVariantStyle(), style]}
       onPress={onPress}>
-      <Text style={[styles.title, variant === 'text' && styles.textVariant]}>
-        {title}
-      </Text>
+      {loading ? (
+        <Text
+          style={[
+            styles.title,
+            {justifyContent: 'center', alignContent: 'center'},
+          ]}>
+          Loading.. <ActivityIndicator color="white" />
+        </Text>
+      ) : (
+        <Text style={[styles.title, variant === 'text' && styles.textVariant]}>
+          {title}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

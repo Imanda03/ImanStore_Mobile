@@ -34,6 +34,7 @@ interface Product {
 interface ProductItem {
   id: number;
   products: Product;
+  quantity: number;
 }
 
 interface OrderQuantity {
@@ -101,25 +102,26 @@ const ProcessOrder = ({navigation}: any) => {
   // Initialize order quantities
   useEffect(() => {
     if (progressOrderList?.orders) {
-      progressOrderList.orders.forEach((item: ProductItem, index: number) => {
-        if (!listItemAnimations[item.id]) {
-          listItemAnimations[item.id] = new Animated.Value(0);
-          // Stagger the animations
-          setTimeout(() => {
-            slideIn(listItemAnimations[item.id]);
-          }, index * 100);
-        }
+      const initialOrderQuantities: OrderQuantity = {};
+      progressOrderList.orders.forEach((item: ProductItem) => {
+        initialOrderQuantities[item.id] = {
+          orderId: item.id,
+          productId: item.products.id,
+          quantity: item.quantity || 1,
+        };
       });
+      setOrderQuantities(initialOrderQuantities);
     }
   }, [progressOrderList?.orders]);
+
+  console.log('order===>', orderQuantities);
 
   // Calculate total price
   useEffect(() => {
     if (progressOrderList?.orders) {
       const newTotal = progressOrderList.orders.reduce(
         (sum: number, item: ProductItem) => {
-          const product = orderQuantities[item.products.id];
-          const quantity = product ? product.quantity : 1;
+          const quantity = orderQuantities[item.id]?.quantity || 1;
           return sum + Number(item.products.price) * quantity;
         },
         0,
@@ -135,8 +137,10 @@ const ProcessOrder = ({navigation}: any) => {
   ) => {
     setOrderQuantities(prev => ({
       ...prev,
-      [productId]: {
-        ...prev[productId],
+      [orderId]: {
+        ...prev[orderId],
+        productId,
+        orderId,
         quantity: newQuantity,
       },
     }));
@@ -147,6 +151,7 @@ const ProcessOrder = ({navigation}: any) => {
   };
 
   const handlePayment = async () => {
+    console.log('order checked', orderQuantities);
     try {
       await PaymentSheet(totalPrice, {
         onSuccess: async (data: any) => {
@@ -232,7 +237,7 @@ const ProcessOrder = ({navigation}: any) => {
         onPress={() => onProductPress(item.products)}
         {...item.products}
         productId={item.products.id}
-        currentQuantity={orderQuantities[item.products.id]?.quantity || 1}
+        currentQuantity={orderQuantities[item.id]?.quantity || 1}
         onQuantityChange={newQuantity =>
           handleQuantityChange(item.products.id, item.id, newQuantity)
         }
@@ -279,8 +284,33 @@ const ProcessOrder = ({navigation}: any) => {
         refreshing={refreshing}
         onRefresh={onRefresh}
         ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No Orders</Text>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 20,
+              top: 50,
+            }}>
+            <Text
+              style={{
+                color: 'gray',
+                fontSize: 18,
+                textAlign: 'center',
+                fontWeight: 'bold',
+                marginBottom: 10,
+              }}>
+              No orders yet!
+            </Text>
+            <Text
+              style={{
+                color: 'gray',
+                fontSize: 14,
+                textAlign: 'center',
+              }}>
+              Your products will appear here once you've placed an order. Browse
+              our store and start shopping today!
+            </Text>
           </View>
         }
       />

@@ -61,3 +61,18 @@ export const fetchUserCompletedOrder = async (
   );
   return response.data;
 };
+
+export const fetchCancelledOrder = async (
+  authToken: string,
+  userId: number,
+) => {
+  const response = await axios.get(
+    `http://192.168.1.104:5000/api/order/cancelled/${userId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+  );
+  return response.data;
+};
