@@ -9,6 +9,7 @@ import {useAuth} from '../../../Context';
 import {useToast} from '../../../Context/ToastContext';
 import {useQuery} from 'react-query';
 import {getProfileDetails} from '../../../services/AuthService';
+import {fetchCancelledOrder} from '../../../services/OrderService';
 
 const ProfileScreen = ({navigation}: any) => {
   const {logout, authToken, userId} = useAuth();
@@ -19,6 +20,12 @@ const ProfileScreen = ({navigation}: any) => {
     isLoading,
     isError,
   } = useQuery(['profile', userId], () => getProfileDetails(authToken, userId));
+
+  const {data: cancelledOrder} = useQuery(['cancelledOrder', userId], () =>
+    fetchCancelledOrder(authToken, userId),
+  );
+
+  console.log('first', cancelledOrder?.orders);
 
   const num = 10;
 
@@ -32,7 +39,7 @@ const ProfileScreen = ({navigation}: any) => {
   };
 
   const onMyListingPress = () => {
-    navigation.navigate('Order');
+    navigation.navigate('InnerScreen', {screen: 'CancelledOrder'});
   };
 
   // Animation refs
@@ -53,7 +60,7 @@ const ProfileScreen = ({navigation}: any) => {
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 1000,
+      duration: 500,
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
@@ -92,8 +99,8 @@ const ProfileScreen = ({navigation}: any) => {
           <Animated.View style={{opacity: fadeAnim}}>
             <ListItem
               onPress={onMyListingPress}
-              title="Orders"
-              subtitle={`You have ${num} orders in progress`}
+              title="Cancelled Orders"
+              subtitle={`${cancelledOrder?.count} orders has been cancelled!`}
             />
             <ListItem
               onPress={onSettingsPress}

@@ -53,6 +53,8 @@ const RenderOrder: React.FC<OrderProps> = ({
     }
   };
 
+  const truncatedTitle =
+    title.length > 30 ? title.substring(0, 25) + '...' : title;
   return (
     <View style={styles.container}>
       <Image
@@ -63,7 +65,7 @@ const RenderOrder: React.FC<OrderProps> = ({
       />
       <View style={styles.secondContainer}>
         <View>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>{truncatedTitle}</Text>
 
           <View style={styles.categoryContainer}>
             <MaterialIcons name="category" size={16} color="#031a03" />

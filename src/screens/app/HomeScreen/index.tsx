@@ -51,7 +51,6 @@ const HomeScreen = ({navigation}: any) => {
   const queryClient = useQueryClient();
   const [selectedCategory, setSelectedCategory] = useState<any>();
   const [keyword, setKeyword] = useState<string>('');
-  const [filteredProduct, setFilteredProduct] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const {
@@ -69,6 +68,9 @@ const HomeScreen = ({navigation}: any) => {
       enabled: !!authToken,
     },
   );
+  const [filteredProduct, setFilteredProduct] = useState<any[]>(
+    productData?.products,
+  );
 
   const {data: recommendedProducts} = useQuery(
     ['recommendedProducts', authToken],
@@ -78,11 +80,30 @@ const HomeScreen = ({navigation}: any) => {
     },
   );
 
+  console.log('check env==> ', process.env.BASE_URL);
+
   useEffect(() => {
-    if (productData && productData.products) {
-      setFilteredProduct(productData.products);
+    if (selectedCategory && !keyword) {
+      const updatedProduct = productData?.products.filter(
+        (product: any) => product?.category_id === selectedCategory,
+      );
+      setFilteredProduct(updatedProduct);
+    } else if (selectedCategory && keyword) {
+      const updatedProduct = productData?.products.filter(
+        (product: any) =>
+          product?.category_id === selectedCategory &&
+          product?.title.toLowerCase().includes(keyword?.toLowerCase()),
+      );
+      setFilteredProduct(updatedProduct);
+    } else if (!selectedCategory && keyword) {
+      const updatedProduct = productData?.products.filter((product: any) =>
+        product?.title.toLowerCase().includes(keyword?.toLowerCase()),
+      );
+      setFilteredProduct(updatedProduct);
+    } else if (!selectedCategory && !keyword) {
+      setFilteredProduct(productData?.products);
     }
-  }, [productData]);
+  }, [selectedCategory, keyword]);
 
   const handleCategoryPress = (id: string) => {
     setSelectedCategory((prevSelected: string | undefined) =>
@@ -170,21 +191,21 @@ const HomeScreen = ({navigation}: any) => {
             keyExtractor={item => String(item.id)}
           />
 
-          {recommendedProducts?.data &&
-            recommendedProducts?.data.length > 0 && (
+          {recommendedProducts?.products &&
+            recommendedProducts.products.length > 0 && (
               <View style={styles.recommendedContainer}>
                 <Text style={styles.recommendedText}>Recommended for you</Text>
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                   <Text style={styles.recommendedLink}>See All</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             )}
 
-          {recommendedProducts?.data && (
+          {recommendedProducts?.products && (
             <View>
               <FlatList
                 horizontal
-                data={recommendedProducts?.data}
+                data={recommendedProducts?.products}
                 showsHorizontalScrollIndicator={true}
                 renderItem={renderProductItem}
                 keyExtractor={(item: any) => String(item.id)}
@@ -197,7 +218,7 @@ const HomeScreen = ({navigation}: any) => {
             <AnimatedBanner
               images={bannerImages}
               onPress={index => {
-                console.log('Banner clicked:', index);
+                // console.log('Banner clicked:', index);
                 // Handle banner press
               }}
             />
